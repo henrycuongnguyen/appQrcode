@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "app-qrcode",
+    "description": "This project is really great.",
+    "slug": "app-qrcode",
+    "privacy": "public",
+    "sdkVersion": "30.0.0",
+    "platforms": ["ios", "android"],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "The app needs permission to your camera in order to take and upload photos (such as avatars).",
+        "NSPhotoLibraryUsageDescription": "The app needs permission to your camera roll in order to upload photos (such as avatars). The app only upload the images you are selected."
+    }
+    },
+    "android": {
+        "permissions": [
+            "CAMERA",
+            "READ_EXTERNAL_STORAGE",
+            "WRITE_EXTERNAL_STORAGE"
+        ]
+    }
+  }
+}
