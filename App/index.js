@@ -18,19 +18,7 @@ export default class App extends React.Component {
         }
     }
 
-    // componentDidMount() {
-    //     let dataURL = "https://oanglelab.com/oa033-cartier/wp-json/wp/v2/posts";
-    //     fetch(dataURL)
-    //       .then(response => response.json())
-    //       .then(response => {
-    //         this.setState({
-    //           posts: response
-    //         })
-    //       })
-    //   }
-
     _handleBarCodeRead = result => {
-        // result = JSON.stringify(result);
         this.setState({
             currentInfo: result,
             showInfo: true
@@ -46,12 +34,11 @@ export default class App extends React.Component {
     }
 
     render() {
-        console.log(this.state.posts)
         return (
             <View style={styles.page}>
                 <View style={styles.btnqrcode}>
-                    <TouchableOpacity onPress={this.showQrCode} style = {styles.btnshowqrcode}>
-                        <Text style = {{color: '#fff', padding: 10}}>Open QrCode</Text>
+                    <TouchableOpacity onPress={this.showQrCode} style={styles.btnshowqrcode}>
+                        <Text style={{ color: '#fff', padding: 10 }}>Open QrCode</Text>
                     </TouchableOpacity>
                 </View>
                 {this.state.showCamera &&
@@ -64,7 +51,7 @@ export default class App extends React.Component {
                                 <TouchableOpacity onPress={() => this.setState({ showCamera: false })} >
                                     <Text style={styles.urlText}>Close</Text>
                                 </TouchableOpacity>
-                                
+
                             </View>
                         </View>
                         <View style={styles.layerCenter}>

@@ -1,12 +1,12 @@
 import React from 'react';
 import Toolbar from '../controls/toolbars';
-import WebContainer from '../controls/webcontainer';
 import {
     Dimensions, Linking, StyleSheet, ScrollView, Alert,
     TouchableOpacity, Image, Modal, TextInput, Switch, View, Text, Platform
 } from 'react-native';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 const ios = Platform.OS === 'ios';
+import axios from 'axios';
 class InfoUser extends React.Component {
 
     constructor(props) {
@@ -18,6 +18,20 @@ class InfoUser extends React.Component {
         }
     }
 
+    componentDidMount() {
+    }
+
+    onFetchPost(id, url) {
+        return axios.get(`${url}`,{
+            params: {
+              ID: id,
+              checkedIn: true
+            }
+          }).then(response => {
+        	alert('Checkedin')
+      	})
+		.catch(err => console.log(err));
+    }
 
     handleClose = () => {
         if (this.props.onRequestClose) {
@@ -25,15 +39,15 @@ class InfoUser extends React.Component {
         }
     }
 
-    handleSubmit = () => {
-        console.log('checkin')
+    handleSubmit = (id, url) => {
+        this.onFetchPost(id, url);
     }
 
     render() {
-        console.log('data', this.props.data)
+        // console.log('data', this.props.data)
         var dataStr = '';
-        if(this.props.data){
-            dataStr = this.props.data.data;
+        if (this.props.data) {
+            dataStr = JSON.parse(this.props.data.data);
         }
         if (!this.props.show) {
             return null;
@@ -50,20 +64,28 @@ class InfoUser extends React.Component {
                     actions={[
                         {
                             icon: <Icon name='save' style={styles.icon} />,
-                            onPress: this.handleSubmit,
+                            onPress: () => this.handleSubmit(dataStr.post_id, dataStr.url),
                             disabled: this.state.loading
                         }
                     ]}
-                    titleText='Info'
+                    titleText='Reserve a Slot'
                     style={styles.toolbar}
                 ></Toolbar>
 
                 <View style={styles.scanBar}>
                     <ScrollView keyboardShouldPersistTaps='always' style={{ backgroundColor: '#fff' }}>
                         <View style={styles.scanBarInfo}>
-                            <View>
-                                <WebContainer html={dataStr} autoHeight={true} style={styles.webView} />
+                            {!!dataStr && <View>
+                                <Text style={styles.textFild}>Date: {dataStr.date}</Text>
+                                <Text style={styles.textFild}>Time: {dataStr.time}</Text>
+                                <Text style={styles.textFild}>Title: {dataStr.title}</Text>
+                                <Text style={styles.textFild}>First name: {dataStr.first_name}</Text>
+                                <Text style={styles.textFild}>Last name : {dataStr.last_name}</Text>
+                                <Text style={styles.textFild}>Email address: {dataStr.email}</Text>
+                                <Text style={styles.textFild}>Country code: {dataStr.country_code}</Text>
+                                <Text style={styles.textFild}>Mobile number: {dataStr.mobile_number}</Text>
                             </View>
+                            }
                         </View>
                     </ScrollView>
                 </View>
@@ -99,33 +121,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 5
     },
-    label: {
-        width: 95,
-        fontWeight: 'bold',
-        marginTop: 5,
-        paddingRight: 5,
-        flex: 1
-    },
-    textbox: {
-        flex: 1,
-        height: 40,
-        padding: 4,
-        backgroundColor: '#f9f9f9',
-        width: width - 125
-    },
-    textboxIos: { borderWidth: 1, borderColor: '#ccc' },
-    inputTextarea: {
-        minHeight: 120,
-        height: null,
-        justifyContent: "flex-start",
-        textAlignVertical: 'top',
-        flex: 1
-    },
-    labelsl: {
-        width: 95,
-        fontWeight: 'bold',
-        marginTop: 5,
-        paddingRight: 5,
+    textFild: {
+        fontSize: 18,
+        paddingLeft: 5
     },
     select: {
         height: 40,
@@ -133,5 +131,5 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f9f9f9'
     },
-   
+
 });

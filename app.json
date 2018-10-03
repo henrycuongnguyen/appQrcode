@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "app-qrcode",
-    "description": "This project is really great.",
+    "description": "Reserve a Slot",
     "slug": "app-qrcode",
     "privacy": "public",
     "sdkVersion": "30.0.0",
