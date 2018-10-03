@@ -81,7 +81,7 @@ class InfoUser extends React.Component {
                                 <Text style={styles.textFild}>Title: {dataStr.title}</Text>
                                 <Text style={styles.textFild}>First name: {dataStr.first_name}</Text>
                                 <Text style={styles.textFild}>Last name : {dataStr.last_name}</Text>
-                                <Text style={styles.textFild}>Email address: {dataStr.email}</Text>
+                                <Text style={styles.textFild}>Email: {dataStr.email}</Text>
                                 <Text style={styles.textFild}>Country code: {dataStr.country_code}</Text>
                                 <Text style={styles.textFild}>Mobile number: {dataStr.mobile_number}</Text>
                             </View>

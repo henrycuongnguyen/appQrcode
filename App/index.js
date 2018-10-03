@@ -59,8 +59,8 @@ export default class App extends React.Component {
                             <View style={styles.focused}>
                                 <Icon
                                     name="ios-qr-scanner"
-                                    size={SCREEN_WIDTH * 2}
-                                    color='blue'
+                                    size={300}
+                                    color='#fff'
                                 />
                             </View>
                             <View style={styles.layerRight} />
@@ -78,8 +78,8 @@ export default class App extends React.Component {
     }
 }
 
-const opacity = 'rgba(0, 0, 0, .6)';
-// const opacity = 'rgba(0, 0, 0, 0)';
+// const opacity = 'rgba(0, 0, 0, .6)';
+const opacity = 'rgba(0, 0, 0, 0)';
 
 const styles = StyleSheet.create({
     page: {
@@ -109,8 +109,8 @@ const styles = StyleSheet.create({
     },
     focused: {
         flex: 10,
-        borderWidth: 1,
-        borderColor: 'green',
+        // borderWidth: 1,
+        // borderColor: 'green',
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     },
     urlText: {
         color: '#fff',
+        fontWeight: 'bold',
         textAlign: 'right',
         marginTop: 23,
         padding: 20
