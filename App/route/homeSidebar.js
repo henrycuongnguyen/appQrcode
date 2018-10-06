@@ -98,8 +98,9 @@ const styles = StyleSheet.create({
         height: 50,
     },
     stretch: {
-        width: 150,
-        height: 150,
+        width: 120,
+        height: 120,
+        resizeMode: 'cover'
     },
     dividerWrap: {
         paddingVertical: 10,

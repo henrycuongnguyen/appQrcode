@@ -33,41 +33,38 @@ export default class App extends React.Component {
         this.setState({ showCamera: true })
     }
 
+    onCloseCamera = () => {
+        this.props.navigation.navigate('Home');
+    }
+
     render() {
         return (
             <View style={styles.page}>
-                <View style={styles.btnqrcode}>
-                    <TouchableOpacity onPress={this.showQrCode} style={styles.btnshowqrcode}>
-                        <Text style={{ color: '#fff', padding: 10 }}>Open QrCode</Text>
-                    </TouchableOpacity>
-                </View>
-                {this.state.showCamera &&
-                    <BarCodeScanner
-                        onBarCodeRead={this._handleBarCodeRead}
-                        style={[StyleSheet.absoluteFill, styles.container]}
-                    >
-                        <View style={styles.layerTop}>
-                            <View>
-                                <TouchableOpacity onPress={() => this.setState({ showCamera: false })} >
-                                    <Text style={styles.urlText}>Close</Text>
-                                </TouchableOpacity>
+                <BarCodeScanner
+                    onBarCodeRead={this._handleBarCodeRead}
+                    style={[StyleSheet.absoluteFill, styles.container]}
+                >
+                    <View style={styles.layerTop}>
+                        <View>
+                            <TouchableOpacity onPress={this.onCloseCamera} >
+                                <Text style={styles.urlText}>Close</Text>
+                            </TouchableOpacity>
 
-                            </View>
                         </View>
-                        <View style={styles.layerCenter}>
-                            <View style={styles.layerLeft} />
-                            <View style={styles.focused}>
-                                <Icon
-                                    name="ios-qr-scanner"
-                                    size={300}
-                                    color='#fff'
-                                />
-                            </View>
-                            <View style={styles.layerRight} />
+                    </View>
+                    <View style={styles.layerCenter}>
+                        <View style={styles.layerLeft} />
+                        <View style={styles.focused}>
+                            <Icon
+                                name="ios-qr-scanner"
+                                size={300}
+                                color='#fff'
+                            />
                         </View>
-                        <View style={styles.layerBottom} />
-                    </BarCodeScanner>
-                }
+                        <View style={styles.layerRight} />
+                    </View>
+                    <View style={styles.layerBottom} />
+                </BarCodeScanner>
                 <BoxInfo
                     data={this.state.currentInfo}
                     onRequestClose={() => this.setState({ showInfo: false })}

@@ -18,7 +18,8 @@ class CreateForm extends React.Component {
 
         this.state = {
             loading: false,
-            checkboxes: false,
+            checkboxes1: false,
+            checkboxes2: false,
             model: {
                 title: '',
                 first_name: '',
@@ -39,15 +40,19 @@ class CreateForm extends React.Component {
         });
     }
 
-    toggleCheckbox =  () => {
+    toggleCheckbox1 =  () => {
         this.setState({
-            checkboxes: !this.state.checkboxes
+            checkboxes1: !this.state.checkboxes1
+        })
+    }
+    toggleCheckbox2 =  () => {
+        this.setState({
+            checkboxes2: !this.state.checkboxes2
         })
     }
 
     handleClose = () => {
         if (this.props.onRequestClose) {
-            this.props.refresh();
             this.props.onRequestClose();
         }
     }
@@ -59,13 +64,26 @@ class CreateForm extends React.Component {
             url: myurl,
             data: qs.stringify(this.state.model),
           }).then(response => {
-            this.props.onRequestClose();
+            // this.props.onRequestClose();
+            Alert.alert(
+                'Thank you for your interest Ms Doe.',
+                `Your reservation has been submitted. We have sent a confirmation email to ${this.state.model.email}.
+                We look forward to seeing you on 1 Nov (Tue) at 11:00 AM. Get ready to be dazzled!`,
+                [
+                  {text: 'OK', onPress: () => {
+                    this.props.refresh();
+                    this.props.onRequestClose();
+                  }},
+                ],
+                { cancelable: false }
+              )
       	})
         .catch(err => console.log('err',err));
     }
 
     render() {
-        const checkboxes = this.state.checkboxes;
+        const checkboxes1 = this.state.checkboxes1;
+        const checkboxes2 = this.state.checkboxes2;
         if (!this.props.show) {
             return null;
         }
@@ -85,7 +103,7 @@ class CreateForm extends React.Component {
                             disabled: this.state.loading
                         }
                     ]}
-                    titleText='Reserve A slot'
+                    titleText='Register Guest'
                     style={styles.toolbar}
                 ></Toolbar>
 
@@ -163,12 +181,18 @@ class CreateForm extends React.Component {
                             </View>
                             <View style={styles.propCheckBox}>
                                 <CheckBox 
-                                onPress={() => this.toggleCheckbox()}
-                                checked={checkboxes}  
+                                onPress={() => this.toggleCheckbox1()}
+                                checked={checkboxes1}  
                                />
-                                <Text style={styles.checkBox}>checkBox</Text>
+                                <Text style={styles.checkBox}> I have read and agree to the Terms and Conditions and Privacy Policy. </Text>
                             </View>
-
+                            <View style={styles.propCheckBox}>
+                                <CheckBox 
+                                onPress={() => this.toggleCheckbox2()}
+                                checked={checkboxes2}  
+                            />
+                                <Text style={styles.checkBox}> I would like to receive information about Cartier’s products or services.</Text>
+                            </View>
                         </View>
                     </ScrollView>
                     {this.state.loading && <Loading />}
@@ -207,6 +231,7 @@ const styles = StyleSheet.create({
     propCheckBox: {
         marginTop: 10,
         flexDirection: 'row',
+        alignItems: "center"
     },
     label: {
         width: 80,
@@ -230,7 +255,8 @@ const styles = StyleSheet.create({
         paddingRight: 5,
     },
     checkBox: {
-        paddingLeft: 20
+        paddingLeft: 20,
+        paddingRight: 5
     }
     
 });

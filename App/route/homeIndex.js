@@ -5,16 +5,27 @@ import { Ionicons, FontAwesome as Icon, MaterialIcons } from '@expo/vector-icons
 import ReservePage from '../pages/reserve/index';
 import QrCode from '../index';
 import MainSidebar from './homeSidebar';
+import Home from '../pages/home/index';
 
 const AccountRouter = createDrawerNavigator(
     {
+        Home: {
+            screen: Home,
+            path: 'home',
+            navigationOptions: {
+                drawerLabel: () => 'Home',
+                drawerIcon: props => (
+                    <MaterialIcons style={[styles.icon, { color: props.tintColor }]} name='home' color={props.tintColor} size={18} />
+                ),
+            }
+        },
         ReservePage: {
             screen: ReservePage,
             path: 'reservePage',
             navigationOptions: {
                 drawerLabel: () => 'All guests',
                 drawerIcon: props => (
-                    <MaterialIcons style={[styles.icon, { color: props.tintColor }]} name='menu' color={props.tintColor} size={18} />
+                    <MaterialIcons style={[styles.icon, { color: props.tintColor }]} name='people' color={props.tintColor} size={18} />
                 ),
             }
         },
@@ -31,7 +42,7 @@ const AccountRouter = createDrawerNavigator(
 
     },
     {
-        initialRouteName: 'ReservePage',
+        initialRouteName: 'Home',
         contentComponent: props => (
             <MainSidebar {...props}
                 routes={this.routes}

@@ -10,7 +10,8 @@ import GuestsItem from './reserveItem';
 import axios from 'axios';
 import ReserveDetail from './detailReserve';
 import { API_URL } from '../constants/Config';
-
+const ios = Platform.OS === 'ios';
+const { SCREEN_WIDTH } = Dimensions.get('window');
 class AllGuests extends Component {
     constructor(props, context) {
         super(props, context);
@@ -69,7 +70,7 @@ class AllGuests extends Component {
         return (
             <View>
                 <Header searchBar rounded autoCorrect={false} style={{ backgroundColor: '#ffa06c' }}>
-                    <Item style={{ padding: 10 }}>
+                    <Item style={[ios ? { padding: 5 } : { padding: 10 } ]}>
                         <Icon name="ios-search" style={{ fontSize: 20 }} />
                         <Input
                             onChangeText={text => this.searchFilterFunction(text)}
@@ -77,9 +78,11 @@ class AllGuests extends Component {
                         />
                         <Icon name="ios-people" />
                     </Item>
+                    {/*
                     <Button transparent>
                         <Text>Search</Text>
                     </Button>
+                    */}
                 </Header>
                 {this.state.data.length == 0 &&
                     <View style={{ alignItems: 'center' }}><Text style={{ padding: 10 }}>The list is empty</Text></View>
@@ -118,8 +121,6 @@ class AllGuests extends Component {
 
     render() {
         const dataCus = this.state.data;
-
-        const ios = Platform.OS === 'ios';
         const actions = this.getActionMenu();
         return (
             <View style={styles.container}>
@@ -157,6 +158,7 @@ class AllGuests extends Component {
                 }
 
                 <ReserveDetail
+                    refresh={() => this.refresh()}
                     data={this.state.currentReserve}
                     open={this.state.currentReserve != null && this.state.currentBox == "reserveDetail"}
                     onRequestClose={() => this.showBox(null)}

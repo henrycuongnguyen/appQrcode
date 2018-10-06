@@ -9,7 +9,7 @@ import { MaterialIcons as Icon } from '@expo/vector-icons';
 const ios = Platform.OS === 'ios';
 import axios from 'axios';
 import {API_URL} from '../constants/Config';
-
+var qs = require("qs");
 class DetailForm extends React.Component {
 
     constructor(props) {
@@ -32,15 +32,28 @@ class DetailForm extends React.Component {
     }
 
     onFetchPost(id) {
-        return axios.get(API_URL,{
-            params: {
-              ID: id,
-              checkedIn: true
-            }
-          }).then(response => {
-        	alert('Checkedin')
-      	})
-		.catch(err => console.log(err));
+        console.log('err');
+    }
+
+    onDeletePost(id) {
+        console.log(id);
+        Alert.alert(
+            'Delete Reservation',
+            'Are you sure?',
+            [
+              {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+              {text: 'OK', onPress: () => {
+                axios.get(API_URL, {
+                    params: { ID: id, agree: 1 }
+                   }).then(response => {
+                    this.props.refresh();
+                    this.props.onRequestClose();
+                  })
+                .catch(err => console.log(err));
+              }},
+            ],
+            { cancelable: false }
+          )
     }
 
     render() {
@@ -107,7 +120,7 @@ class DetailForm extends React.Component {
                                 <TouchableOpacity style={styles.btn} onPress = {()=> this.onFetchPost(data.ID)}>
                                     <Text style={styles.btnRes}>Confirm Check-in</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.btn}>
+                                <TouchableOpacity style={styles.btn} onPress = {()=> this.onDeletePost(data.ID)}>
                                     <Text style={styles.btnRes}>Delete Reservation</Text>
                                 </TouchableOpacity>
                             </View>
