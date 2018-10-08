@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "app-qrcode",
-    "description": "Reserve a Slot",
-    "slug": "app-qrcode",
+    "name": "O Event",
+    "description": "O Event",
+    "slug": "O Event",
     "privacy": "public",
     "sdkVersion": "30.0.0",
     "platforms": ["ios", "android"],
@@ -21,6 +21,9 @@
       "**/*"
     ],
     "ios": {
+      "buildNumber": "1",
+      "bundleIdentifier": "com.oangle.dev",
+      "icon": "./assets/icon-ios.png",
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "The app needs permission to your camera in order to take and upload photos (such as avatars).",
@@ -28,6 +31,9 @@
     }
     },
     "android": {
+      "versionCode": 1,
+      "package": "com.oangle.dev",
+      "icon": "./assets/icon-android.png",
         "permissions": [
             "CAMERA",
             "READ_EXTERNAL_STORAGE",

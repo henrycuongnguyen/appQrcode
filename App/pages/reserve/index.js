@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Dimensions, Alert, Platform, StatusBar, View, Text, FlatList, TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
+import { StyleSheet, Dimensions, Alert, Platform, StatusBar, View, Text, FlatList, TouchableOpacity, RefreshControl, ScrollView, SectionList } from 'react-native';
 import { Ionicons as Icon, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { Container, Header, Left, Body, Right, Button, Title, Item, Input } from 'native-base';
 import { Constants } from 'expo';
@@ -113,8 +113,26 @@ class AllGuests extends Component {
     }
 
     render() {
-        const dataCus = this.state.data;
+        const dataSection = {};
+        this.state.data.map(item => {
+            const key = `${item.post_title.charAt(0).toUpperCase()}`;
+            if (!dataSection[key]) {
+                dataSection[key] = [];
+            }
+            dataSection[key].push( item )
+        });
+        const ordered = {};
+        Object.keys(dataSection).sort().forEach(function(key) {
+          ordered[key] = dataSection[key];
+        });
+   
         const actions = this.getActionMenu();
+        const sections = Object.keys(ordered).map(key => {
+            return {
+                title:key,
+                data: ordered[key]
+            }
+        })
         return (
             <View style={[height >= 1024 ? styles.wraper : styles.container]}>
                 <View style={[height >= 1024 ? styles.containerIpad : styles.container]}>
@@ -130,7 +148,7 @@ class AllGuests extends Component {
                                 <Title style={{ color: '#fff' }}>All guests</Title>
                             </Body>
                             <Right>
-                                <Button transparent onPress = {this.onToggleModal}>
+                                <Button transparent onPress={this.onToggleModal}>
                                     <MaterialIcons name='add' style={{ fontSize: 22, color: '#fff', paddingRight: 5 }} />
                                 </Button>
                             </Right>
@@ -160,11 +178,10 @@ class AllGuests extends Component {
                         */}
                     </View>
                     {
-                        <FlatList
-                            style={styles.listView}
-                            data={dataCus}
-                            keyExtractor={item => 'ID' + item.ID}
+                        <SectionList
+                            sections={sections}
                             renderItem={this.renderItem}
+                            renderSectionHeader={({ section }) => this.renderHeader(section)}
                             refreshControl={
                                 <RefreshControl
                                     tintColor="#28cc54"
@@ -176,17 +193,18 @@ class AllGuests extends Component {
                                 />
                             }
                             ListHeaderComponent={this.renderHeader}
+                            keyExtractor={(item) => 'ID' + item.ID}
                         />
                     }
 
                     {
                         height < 1024 &&
-                    <ReserveDetail
-                        refresh={() => this.refresh()}
-                        data={this.state.currentReserve}
-                        open={this.state.currentReserve != null && this.state.currentBox == "reserveDetail"}
-                        onRequestClose={() => this.showBox(null)}
-                    />
+                        <ReserveDetail
+                            refresh={() => this.refresh()}
+                            data={this.state.currentReserve}
+                            open={this.state.currentReserve != null && this.state.currentBox == "reserveDetail"}
+                            onRequestClose={() => this.showBox(null)}
+                        />
                     }
                     {
                         height < 1024 &&
@@ -224,8 +242,14 @@ class AllGuests extends Component {
         )
 
     }
+    renderHeader = section => {
+        return (
+            <Text style={styles.listHeader}>{section.title}</Text>
+        )
+    }
 
     renderItem = ({ item }) => {
+        console.log(item)
         return (
             <GuestsItem data={item} showBox={this.showBox} />
         );
@@ -277,5 +301,11 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         alignItems: 'center',
         borderRadius: 30
-    }
+    },
+    listHeader: {
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        backgroundColor: '#f2f2f2',
+        fontWeight: 'bold'
+    },
 });

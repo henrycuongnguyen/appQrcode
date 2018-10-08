@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     box: {
-        flex: 1,
+        // flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         width: 150,
