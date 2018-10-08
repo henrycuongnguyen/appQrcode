@@ -1,15 +1,17 @@
 import React from 'react';
-import { StyleSheet, View, Text, Platform, StatusBar, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Platform, StatusBar, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import Toolbar from '../../controls/toolbars';
 import MyStatusBar from '../statusBar/MyStatusBar';
 import Create from '../reserve/create';
+const { height } = Dimensions.get('window');
 class Home extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
             refreshing: false,
             showCreate: false,
+            activeBtn: null,
         }
     }
 
@@ -20,18 +22,21 @@ class Home extends React.Component {
         this.props.navigation.openDrawer();
     }
 
-    onShowQrcode =() => {
+    onShowQrcode = () => {
         this.props.navigation.navigate('QrCode');
     }
 
-    onShowList =() => {
+    onShowList = () => {
         this.props.navigation.navigate('ReservePage');
     }
 
     onShowRegister = () => {
-            this.setState({ showCreate: true })
+        this.setState({ showCreate: true })
     }
 
+    onShowRegisterIpad = () => {
+        this.props.navigation.navigate('ReservePage');
+    }
 
     render() {
         const ios = Platform.OS === 'ios';
@@ -42,33 +47,36 @@ class Home extends React.Component {
                         <StatusBar backgroundColor='#ffa06c' barStyle='light-content' /> :
                         <MyStatusBar backgroundColor='#ffa06c' barStyle='light-content' />
                 }
-                <Toolbar
-                    noShadow
-                    icon={<MaterialIcons name='menu' style={{ fontSize: 22, color: '#fff' }} />}
-                    onIconPress={this.showMenu}
-                    titleText='Home'
-                    style={styles.toolbar}
-                ></Toolbar>
-                <ScrollView>
-                    <View style={styles.container}>
-                        <View style={styles.wrapBox}>
-                                <TouchableOpacity style={styles.box} onPress ={this.onShowRegister} >
-                                    <Text style = {styles.text}>Register Guest</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.box} onPress ={this.onShowQrcode}>
-                                    <Text style = {styles.text}>Scan QR Code</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.box} onPress ={this.onShowList}>
-                                    <Text style = {styles.text}>Guest List</Text>
-                                </TouchableOpacity>
-                        </View>
-                        <Create
-                            onRequestClose={() => this.setState({ showCreate: false })}
-                            refresh={() => this.onShowList()}
-                            show={this.state.showCreate}
-                        />
+                {height < 1024 ?
+                    <Toolbar
+                        noShadow
+                        icon={<MaterialIcons name='menu' style={{ fontSize: 22, color: '#fff' }} />}
+                        onIconPress={this.showMenu}
+                        titleText='Home'
+                        style={styles.toolbar}
+                    ></Toolbar> :
+                    <View style={{ alignItems: 'center', backgroundColor: '#ffa06c', paddingTop: 10 }}>
+                        <Text style={{ color: '#fff', fontWeight: 'bold', padding: 23 }}>Main menu</Text>
                     </View>
-                </ScrollView>
+                }
+                <View style={styles.container}>
+                    <View style={[height >= 1024 ? styles.wrapBoxIpad : styles.wrapBox]}>
+                        <TouchableOpacity style={[styles.box, height >= 1024 && { borderRadius: 75 }, this.state.activeBtn == 3 && { backgroundColor: '#ffa06c' }]} onPress={height >= 1024 ? this.onShowRegisterIpad : this.onShowRegister} >
+                            <Text style={[styles.text, this.state.activeBtn == 3 && { color: '#fff' }]}>Register Guest</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.box, height >= 1024 && { borderRadius: 75 }, this.state.activeBtn == 1 && { backgroundColor: '#ffa06c' }]} onPress={this.onShowQrcode}>
+                            <Text style={[styles.text, this.state.activeBtn == 1 && { color: '#fff' }]}>Scan QR Code</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.box, height >= 1024 && { borderRadius: 75 }, this.state.activeBtn == 2 && { backgroundColor: '#ffa06c' }]} onPress={this.onShowList}>
+                            <Text style={[styles.text, this.state.activeBtn == 2 && { color: '#fff' }]}>Guest List</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <Create
+                        onRequestClose={() => this.setState({ showCreate: false })}
+                        refresh={() => this.onShowList()}
+                        show={this.state.showCreate}
+                    />
+                </View>
             </View>
         );
     }
@@ -87,6 +95,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    wrapBoxIpad: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     box: {
         flex: 1,
         alignItems: 'center',
@@ -97,11 +111,12 @@ const styles = StyleSheet.create({
         padding: 10,
         borderColor: '#ffa06c',
         borderRadius: 75,
-        borderWidth: 2
+        borderWidth: 2,
+        overflow : "hidden",
     },
 
     toolbar: {
         backgroundColor: '#ffa06c'
     },
-    text: {color: '#ffa06c', fontWeight: 'bold', fontSize: 15}
+    text: { color: '#ffa06c', fontWeight: 'bold', fontSize: 15 }
 });

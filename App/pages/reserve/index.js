@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, Dimensions, Alert, Platform, StatusBar, View, Text, FlatList, TouchableOpacity, RefreshControl, SearchBar } from 'react-native';
+import { StyleSheet, Dimensions, Alert, Platform, StatusBar, View, Text, FlatList, TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
 import { Ionicons as Icon, MaterialIcons, FontAwesome } from '@expo/vector-icons';
-import { Header, Item, Input, Button } from 'native-base';
+import { Container, Header, Left, Body, Right, Button, Title, Item, Input } from 'native-base';
 import { Constants } from 'expo';
 import Toolbar from '../../controls/toolbars';
 import MyStatusBar from '../statusBar/MyStatusBar';
@@ -11,7 +11,8 @@ import axios from 'axios';
 import ReserveDetail from './detailReserve';
 import { API_URL } from '../constants/Config';
 const ios = Platform.OS === 'ios';
-const { SCREEN_WIDTH } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 class AllGuests extends Component {
     constructor(props, context) {
         super(props, context);
@@ -19,24 +20,25 @@ class AllGuests extends Component {
             loading: false,
             refreshing: false,
             showCreate: false,
+            showCreateIpad: height >= 1024 ? true : false,
             data: [],
             currentReserve: null,
             showDetailRes: false,
             error: null,
+            isVisible: 'showModalCreate',
         }
         this.arrayholder = [];
     }
 
     componentDidMount() {
-        // var urlItem = `${API_URL}/wp-json/sections_endpoint/v2/reserves`;
-        // return axios.get(`${urlItem}`).then(response => {
-        //     this.setState({
-        //         data: response.data
-        //     })
-        //     this.arrayholder = response.data;
-        // })
-        //     .catch(err => console.log(err));
-        this.refresh();
+        var urlItem = `${API_URL}/wp-json/sections_endpoint/v2/reserves`;
+        return axios.get(`${urlItem}`).then(response => {
+            this.setState({
+                data: response.data
+            })
+            this.arrayholder = response.data;
+        })
+            .catch(err => console.log(err));
     }
 
     getActionMenu = () => {
@@ -59,7 +61,13 @@ class AllGuests extends Component {
     }
 
     showBox = (data, box = '') => {
-        this.setState({ currentReserve: data, currentBox: box });
+        this.setState({ currentReserve: data, currentBox: box, isVisible: 'showModalDetail' });
+    }
+
+    onToggleModal = () => {
+        this.setState({
+            isVisible: 'showModalCreate'
+        })
     }
 
     showMenu = () => {
@@ -69,21 +77,6 @@ class AllGuests extends Component {
     renderHeader = () => {
         return (
             <View>
-                <Header searchBar rounded autoCorrect={false} style={{ backgroundColor: '#ffa06c' }}>
-                    <Item style={[ios ? { padding: 5 } : { padding: 10 } ]}>
-                        <Icon name="ios-search" style={{ fontSize: 20 }} />
-                        <Input
-                            onChangeText={text => this.searchFilterFunction(text)}
-                            placeholder="Search"
-                        />
-                        <Icon name="ios-people" />
-                    </Item>
-                    {/*
-                    <Button transparent>
-                        <Text>Search</Text>
-                    </Button>
-                    */}
-                </Header>
                 {this.state.data.length == 0 &&
                     <View style={{ alignItems: 'center' }}><Text style={{ padding: 10 }}>The list is empty</Text></View>
                 }
@@ -123,52 +116,110 @@ class AllGuests extends Component {
         const dataCus = this.state.data;
         const actions = this.getActionMenu();
         return (
-            <View style={styles.container}>
-                {ios ? <StatusBar backgroundColor='#ffa06c' barStyle='light-content' /> : <MyStatusBar backgroundColor='#ffa06c' barStyle='light-content' />}
-                <Toolbar
-                    noShadow
-                    icon={<MaterialIcons name='menu' style={{ fontSize: 22, color: '#fff' }} />}
-                    actions={actions}
-                    onIconPress={this.showMenu}
-                    titleText='All guests'
-                    style={styles.toolbar}
-                ></Toolbar>
-                {
-                    // dataCus.length > 0 ?
-                    <FlatList
-                        style={styles.listView}
-                        data={dataCus}
-                        keyExtractor={item => 'ID' + item.ID}
-                        renderItem={this.renderItem}
-                        refreshControl={
-                            <RefreshControl
-                                tintColor="#28cc54"
-                                title="Loading..."
-                                titleColor="#00ff00"
-                                colors={['#28cc54', '#00ff00', '#ff0000']}
-                                refreshing={this.state.refreshing}
-                                onRefresh={this.refresh}
-                            />
-                        }
-                        ListHeaderComponent={this.renderHeader}
+            <View style={[height >= 1024 ? styles.wraper : styles.container]}>
+                <View style={[height >= 1024 ? styles.containerIpad : styles.container]}>
+                    {ios ? <StatusBar backgroundColor='#ffa06c' barStyle='light-content' /> : <MyStatusBar backgroundColor='#ffa06c' barStyle='light-content' />}
+                    {height >= 1024 ?
+                        <Header style={{ backgroundColor: '#ffa06c', borderBottomWidth: 0 }}>
+                            <Left>
+                                <Button transparent onPress={this.showMenu}>
+                                    <MaterialIcons name='menu' style={{ fontSize: 22, color: '#fff' }} />
+                                </Button>
+                            </Left>
+                            <Body>
+                                <Title style={{ color: '#fff' }}>All guests</Title>
+                            </Body>
+                            <Right>
+                                <Button transparent onPress = {this.onToggleModal}>
+                                    <MaterialIcons name='add' style={{ fontSize: 22, color: '#fff', paddingRight: 5 }} />
+                                </Button>
+                            </Right>
+                        </Header>
+                        :
+                        <Toolbar
+                            noShadow
+                            icon={<MaterialIcons name='menu' style={{ fontSize: 22, color: '#fff' }} />}
+                            actions={actions}
+                            onIconPress={this.showMenu}
+                            titleText='All guests'
+                            style={styles.toolbar}
+                        ></Toolbar>
+                    }
+                    <View>
+                        <Header searchBar rounded autoCorrect={false} style={[height >= 1024 ? { backgroundColor: '#fff' } : { backgroundColor: '#ffa06c' }]}>
+                            <Item style={[ios ? { padding: 5 } : { padding: 10 }]}>
+                                <Icon name="ios-search" style={{ fontSize: 20 }} />
+                                <Input
+                                    onChangeText={text => this.searchFilterFunction(text)}
+                                    placeholder="Search"
+                                />
+                            </Item>
+                        </Header>
+                        {/*this.state.data.length == 0 &&
+                            <View style={{ alignItems: 'center' }}><Text style={{ padding: 10 }}>The list is empty</Text></View>
+                        */}
+                    </View>
+                    {
+                        <FlatList
+                            style={styles.listView}
+                            data={dataCus}
+                            keyExtractor={item => 'ID' + item.ID}
+                            renderItem={this.renderItem}
+                            refreshControl={
+                                <RefreshControl
+                                    tintColor="#28cc54"
+                                    title="Loading..."
+                                    titleColor="#00ff00"
+                                    colors={['#28cc54', '#00ff00', '#ff0000']}
+                                    refreshing={this.state.refreshing}
+                                    onRefresh={this.refresh}
+                                />
+                            }
+                            ListHeaderComponent={this.renderHeader}
+                        />
+                    }
+
+                    {
+                        height < 1024 &&
+                    <ReserveDetail
+                        refresh={() => this.refresh()}
+                        data={this.state.currentReserve}
+                        open={this.state.currentReserve != null && this.state.currentBox == "reserveDetail"}
+                        onRequestClose={() => this.showBox(null)}
                     />
-                    // :
-                    // <View style={{ alignItems: 'center' }}><Text style={{ padding: 10 }}>The list is empty</Text></View>
-
+                    }
+                    {
+                        height < 1024 &&
+                        <Create
+                            onRequestClose={() => this.setState({ showCreate: false })}
+                            refresh={() => this.refresh()}
+                            show={this.state.showCreate}
+                        />
+                    }
+                </View>
+                {
+                    height >= 1024 && this.state.isVisible == 'showModalCreate' &&
+                    <View style={styles.containerIpad1}>
+                        <Create
+                            onRequestClose={() => this.setState({ showCreate: false })}
+                            refresh={() => this.refresh()}
+                            show={this.state.showCreateIpad}
+                            showCreateIpad
+                        />
+                    </View>
                 }
-
-                <ReserveDetail
-                    refresh={() => this.refresh()}
-                    data={this.state.currentReserve}
-                    open={this.state.currentReserve != null && this.state.currentBox == "reserveDetail"}
-                    onRequestClose={() => this.showBox(null)}
-                />
-
-                <Create
-                    onRequestClose={() => this.setState({ showCreate: false })}
-                    refresh={() => this.refresh()}
-                    show={this.state.showCreate}
-                />
+                {
+                    height >= 1024 && this.state.currentBox == 'reserveDetail' && this.state.isVisible == 'showModalDetail' &&
+                    <View style={styles.containerIpad1}>
+                        <ReserveDetail
+                            data={this.state.currentReserve}
+                            onRequestClose={() => this.showBox(null)}
+                            refresh={() => this.refresh()}
+                            open={this.state.currentReserve != null && this.state.currentBox == "reserveDetail"}
+                            showDetailIpad
+                        />
+                    </View>
+                }
             </View>
         )
 
@@ -185,9 +236,19 @@ class AllGuests extends Component {
 export default AllGuests;
 
 const styles = StyleSheet.create({
+    wraper: {
+        flex: 1,
+        flexDirection: 'row'
+    },
     container: {
         flex: 1,
         backgroundColor: '#f3f3f3',
+    },
+    containerIpad: {
+        flex: 1,
+    },
+    containerIpad1: {
+        flex: 2,
     },
     header: {
         paddingTop: Constants.statusBarHeight,

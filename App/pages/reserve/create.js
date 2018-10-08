@@ -5,12 +5,13 @@ import {
     Dimensions, Linking, StyleSheet, ScrollView, Alert,
     TouchableOpacity, Image, Modal, TextInput, Switch, View, Text, Platform
 } from 'react-native';
-import { CheckBox } from 'native-base';
+import { CheckBox, Form, Item, Input, ListItem, Body, Header, Left, Right, Title, Button, Picker } from 'native-base';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 const ios = Platform.OS === 'ios';
 import axios from 'axios';
-import {API_URL} from '../constants/Config';
+import { API_URL } from '../constants/Config';
 var qs = require("qs");
+const Items = Picker.Item;
 class CreateForm extends React.Component {
 
     constructor(props) {
@@ -29,6 +30,10 @@ class CreateForm extends React.Component {
                 mobile_number: '',
                 date: '1 NOV (THU)',
                 time: '11:00 AM',
+            },
+            selectedItem: undefined,
+            results: {
+                items: []
             }
         }
     }
@@ -40,12 +45,12 @@ class CreateForm extends React.Component {
         });
     }
 
-    toggleCheckbox1 =  () => {
+    toggleCheckbox1 = () => {
         this.setState({
             checkboxes1: !this.state.checkboxes1
         })
     }
-    toggleCheckbox2 =  () => {
+    toggleCheckbox2 = () => {
         this.setState({
             checkboxes2: !this.state.checkboxes2
         })
@@ -59,27 +64,67 @@ class CreateForm extends React.Component {
 
     handleSubmit = () => {
         var myurl = `${API_URL}/reserve/`;
-        return axios({
-            method: 'POST',
-            url: myurl,
-            data: qs.stringify(this.state.model),
-          }).then(response => {
-            // this.props.onRequestClose();
-            Alert.alert(
-                'Thank you for your interest Ms Doe.',
-                `Your reservation has been submitted. We have sent a confirmation email to ${this.state.model.email}.
-                We look forward to seeing you on 1 Nov (Tue) at 11:00 AM. Get ready to be dazzled!`,
-                [
-                  {text: 'OK', onPress: () => {
-                    this.props.refresh();
-                    this.props.onRequestClose();
-                  }},
-                ],
-                { cancelable: false }
-              )
-      	})
-        .catch(err => console.log('err',err));
+        var vfName = this.state.model.first_name;
+        var vlName = this.state.model.last_name;
+        var vemail = this.state.model.email;
+        var vPhone = this.state.model.mobile_number;
+        var vCode = this.state.model.country_code;
+        var vTitle = this.state.model.title;
+        if (vfName == '' || vlName == '' || vemail == '' || vPhone == '' || vCode == '' || vTitle == '') {
+            alert('Please enter full fields');
+        } else {
+            return axios({
+                method: 'POST',
+                url: myurl,
+                data: qs.stringify(this.state.model),
+            }).then(response => {
+                Alert.alert(
+                    'Thank you for your interest Ms Doe.',
+                    `Your reservation has been submitted. We have sent a confirmation email to ${this.state.model.email}. We look forward to seeing you on ${this.state.model.date} at ${this.state.model.time}. Get ready to be dazzled!`,
+                    [
+                        {
+                            text: 'OK', onPress: () => {
+                                this.props.refresh();
+                                this.props.onRequestClose();
+                            }
+                        },
+                    ],
+                    { cancelable: false }
+                )
+
+                this.setState({
+                    ...this.state,
+                    model: {
+                        title: '',
+                        first_name: '',
+                        last_name: '',
+                        email: '',
+                        country_code: '',
+                        mobile_number: '',
+                    }
+                })
+
+            })
+                .catch(err => console.log('err', err));
+        }
     }
+
+    onValueChange = (value) => {
+        this.setState({
+            model: {
+                date: value,
+            }
+        });
+    }
+
+    onValueChangeTime = (value) => {
+        this.setState({
+            model: {
+                time: value,
+            }
+        });
+    }
+
 
     render() {
         const checkboxes1 = this.state.checkboxes1;
@@ -89,116 +134,301 @@ class CreateForm extends React.Component {
         }
 
         return (
-            <Modal
-                supportedOrientations={['portrait', 'landscape']}
-                onRequestClose={this.handleClose} >
-                <Toolbar
-                    elevation={2}
-                    icon={<Icon name='arrow-back' style={styles.icon} />}
-                    onIconPress={this.handleClose}
-                    actions={[
-                        {
-                            icon: <Icon name='save' style={styles.icon} />,
-                            onPress: this.handleSubmit,
-                            disabled: this.state.loading
-                        }
-                    ]}
-                    titleText='Register Guest'
-                    style={styles.toolbar}
-                ></Toolbar>
+            this.props.showCreateIpad ?
+                <View style = {{backgroundColor: '#f5f5f5', flex: 1 }}>
+                    <Header style={{ backgroundColor: '#ffa06c', borderBottomWidth: 0 }}>
+                        <Left />
+                        <Body>
+                            <Title style={{ color: '#fff', paddingTop: 5 }}>Reserve a slot</Title>
+                        </Body>
+                        <Right />
+                    </Header>
 
-                <View style={styles.customer}>
-                    <ScrollView keyboardShouldPersistTaps='always' style={{ backgroundColor: '#fff' }}>
-                        <View style={styles.customerInfo}>
-                            <View style={styles.prop}>
-                                <Text style={styles.label}>Title</Text>
-                                <TextInput
-                                    autoCapitalize='words'
-                                    ref='title'
-                                    style={[styles.TextInput, ios && styles.TextInputIos]}
-                                    required
-                                    underlineColorAndroid='transparent'
-                                    value={this.state.model.title}
-                                    onChangeText={text => this.setValue({ title: text })} />
+                    <View style={{ padding: 15, backgroundColor: '#f5f5f5' }}>
+                        <View style={styles.reserveInfoIpad}>
+                            <Text style={{ marginBottom: 15}}>Complete the form below to reserve a slot for Cartier Collecrtion Exihibition.</Text>
+                            <Form style={{ backgroundColor: '#fff' }}>
+                                <Item>
+                                    <Picker
+                                        mode='dropdown'
+                                        selectedValue={this.state.model.date}
+                                        onValueChange={this.onValueChange}>
+                                        <Items label='1 NOV (THU)' value='1 NOV (THU)' />
+                                        <Items label='2 NOV (FRI)' value='2 NOV (FRI)' />
+                                        <Items label='3 NOV (SAT)' value='3 NOV (SAT)' />
+                                        <Items label='4 NOV (SUN)' value='4 NOV (SUN)' />
+                                        <Items label='5 NOV (MON)' value='5 NOV (MON)' />
+                                        <Items label='6 NOV (TUE)' value='6 NOV (TUE)' />
+                                        <Items label='7 NOV (WED)' value='7 NOV (WED)' />
+                                        <Items label='8 NOV (THU)' value='8 NOV (THU)' />
+                                        <Items label='9 NOV (FRI)' value='9 NOV (FRI)' />
+                                        <Items label='10 NOV (SAT)' value='10 NOV (SAT)' />
+                                        <Items label='11 NOV (SUN)' value='11 NOV (SUN)' />
+                                        <Items label='12 NOV (MON)' value='12 NOV (MON)' />
+                                        <Items label='13 NOV (TUE)' value='13 NOV (TUE)' />
+                                        <Items label='14 NOV (WED)' value='14 NOV (WED)' />
+                                        <Items label='15 NOV (THU)' value='15 NOV (THU)' />
+                                        <Items label='16 NOV (FRI)' value='16 NOV (FRI)' />
+                                    </Picker>
+                                </Item>
+                                <Item>
+                                    <Picker
+                                        mode='dropdown'
+                                        selectedValue={this.state.model.time}
+                                        onValueChange={this.onValueChangeTime}>
+                                        <Items label='11:00 AM' value='11:00 AM' />
+                                        <Items label='12:00 AM' value='12:00 AM' />
+                                        <Items label='1:00 AM' value='1:00 AM' />
+                                        <Items label='2:00 AM' value='2:00 AM' />
+                                        <Items label='3:00 AM' value='3:00 AM' />
+                                        <Items label='4:00 AM' value='4:00 AM' />
+                                        <Items label='5:00 AM' value='5:00 AM' />
+                                        <Items label='6:00 AM' value='6:00 AM' />
+                                        <Items label='7:00 AM' value='7:00 AM' />
+                                    </Picker>
+                                </Item>
+                                <Item>
+                                    <Input
+                                        placeholder="Title"
+                                        autoCapitalize='words'
+                                        ref='title'
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={this.state.model.title}
+                                        onChangeText={text => this.setValue({ title: text })}
+                                    />
+                                </Item>
+                                <Item>
+                                    <Input
+                                        placeholder="First Name"
+                                        autoCapitalize='words'
+                                        ref='fname'
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={this.state.model.first_name}
+                                        onChangeText={text => this.setValue({ first_name: text })}
+                                    />
+                                </Item>
+                                <Item>
+                                    <Input
+                                        placeholder="Last Name"
+                                        autoCapitalize='words'
+                                        ref='lname'
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={this.state.model.last_name}
+                                        onChangeText={text => this.setValue({ last_name: text })}
+                                    />
+                                </Item>
+                                <Item>
+                                    <Input
+                                        keyboardType='email-address'
+                                        placeholder="Email"
+                                        autoCapitalize='none'
+                                        ref='mail'
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={this.state.model.email}
+                                        onChangeText={text => this.setValue({ email: text })}
+                                    />
+                                </Item>
+                                <Item>
+                                    <Input
+                                        keyboardType='phone-pad'
+                                        placeholder="Country Code"
+                                        autoCapitalize='words'
+                                        ref='mail'
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={this.state.model.country_code}
+                                        onChangeText={text => this.setValue({ country_code: text })}
+                                    />
+                                </Item>
+                                <Item>
+                                    <Input
+                                        keyboardType='phone-pad'
+                                        placeholder="Phone Number"
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={this.state.model.mobile_number}
+                                        onChangeText={text => this.setValue({ mobile_number: text })}
+                                    />
+                                </Item>
+                                <ListItem>
+                                    <CheckBox
+                                        onPress={() => this.toggleCheckbox1()}
+                                        checked={checkboxes1} />
+                                    <Body>
+                                        <Text style={{ paddingLeft: 10 }}>I have read and agree to the Terms and Conditions and Privacy Policy.</Text>
+                                    </Body>
+                                </ListItem>
+                                <ListItem style={{ borderBottomWidth: 0 }}>
+                                    <CheckBox
+                                        onPress={() => this.toggleCheckbox2()}
+                                        checked={checkboxes2} />
+                                    <Body>
+                                        <Text style={{ paddingLeft: 10 }}>I would like to receive information about Cartier’s products or services.</Text>
+                                    </Body>
+                                </ListItem>
+                            </Form>
+
+                            <View style={{ marginTop: 30, marginLeft: 0 }}>
+                                <Button transparent dark onPress={this.handleSubmit} style={{ backgroundColor: '#fff' }} >
+                                    <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Reserve a slot</Text>
+                                </Button>
                             </View>
-                            <View style={styles.prop}>
-                                <Text style={styles.label}>First name</Text>
-                                <TextInput
-                                    autoCapitalize='words'
-                                    ref='fname'
-                                    style={[styles.TextInput, ios && styles.TextInputIos]}
-                                    required
-                                    underlineColorAndroid='transparent'
-                                    value={this.state.model.first_name}
-                                    onChangeText={text => this.setValue({ first_name: text })} />
-                            </View>
-                             <View style={styles.prop}>
-                                <Text style={styles.label}>Last name</Text>
-                                <TextInput
-                                    autoCapitalize='words'
-                                    ref='lname'
-                                    style={[styles.TextInput, ios && styles.TextInputIos]}
-                                    required
-                                    underlineColorAndroid='transparent'
-                                    value={this.state.model.last_name}
-                                    onChangeText={text => this.setValue({ last_name: text })} />
-                            </View>
-                            <View style={styles.prop}>
-                                <Text style={styles.label}>Email</Text>
-                                <TextInput
-                                    ref='mail'
-                                    style={[styles.TextInput, ios && styles.TextInputIos]}
-                                    // required
-                                    autoCapitalize='none'
-                                    underlineColorAndroid='transparent'
-                                    value={this.state.model.email}
-                                    keyboardType='email-address'
-                                    onChangeText={text => this.setValue({ email: text })} />
-                            </View>
-                            <View style={styles.prop}>
-                                <Text style={styles.label}>Country Code</Text>
-                                <TextInput
-                                    ref='code'
-                                    style={[styles.TextInput, ios && styles.TextInputIos]}
-                                    required
-                                    autoCapitalize='none'
-                                    underlineColorAndroid='transparent'
-                                    value={this.state.model.country_code}
-                                    keyboardType='phone-pad'
-                                    onChangeText={text => this.setValue({ country_code: text })} />
-                            </View>
-                            <View style={styles.prop}>
-                                <Text style={styles.label}>Phone</Text>
-                                <TextInput
-                                    ref='code'
-                                    style={[styles.TextInput, ios && styles.TextInputIos]}
-                                    required
-                                    autoCapitalize='none'
-                                    underlineColorAndroid='transparent'
-                                    value={this.state.model.mobile_number}
-                                    keyboardType='phone-pad'
-                                    onChangeText={text => this.setValue({ mobile_number: text })} />
-                            </View>
-                            <View style={styles.propCheckBox}>
-                                <CheckBox 
-                                onPress={() => this.toggleCheckbox1()}
-                                checked={checkboxes1}  
-                               />
-                                <Text style={styles.checkBox}> I have read and agree to the Terms and Conditions and Privacy Policy. </Text>
-                            </View>
-                            <View style={styles.propCheckBox}>
-                                <CheckBox 
-                                onPress={() => this.toggleCheckbox2()}
-                                checked={checkboxes2}  
-                            />
-                                <Text style={styles.checkBox}> I would like to receive information about Cartier’s products or services.</Text>
+                        </View>
+                    </View>
+                </View>
+                : <Modal
+                    supportedOrientations={['portrait', 'landscape']}
+                    onRequestClose={this.handleClose} >
+                    <Toolbar
+                        elevation={2}
+                        icon={<Icon name='arrow-back' style={styles.icon} />}
+                        onIconPress={this.handleClose}
+                        titleText='Register Guest'
+                        style={styles.toolbar}
+                    ></Toolbar>
+                    <ScrollView keyboardShouldPersistTaps='always'>
+                        <View style={{ padding: 15, backgroundColor: '#f5f5f5' }}>
+                            <View style={styles.reserveInfoIpad}>
+                                <Text style={{ marginBottom: 15 }}>Complete the form below to reserve a slot for Cartier Collecrtion Exihibition.</Text>
+                                <Form style={{ backgroundColor: '#fff' }}>
+                                    <Item>
+                                        <Picker
+                                            mode='dropdown'
+                                            selectedValue={this.state.model.date}
+                                            onValueChange={this.onValueChange}>
+                                            <Items label='1 NOV (THU)' value='1 NOV (THU)' />
+                                            <Items label='2 NOV (FRI)' value='2 NOV (FRI)' />
+                                            <Items label='3 NOV (SAT)' value='3 NOV (SAT)' />
+                                            <Items label='4 NOV (SUN)' value='4 NOV (SUN)' />
+                                            <Items label='5 NOV (MON)' value='5 NOV (MON)' />
+                                            <Items label='6 NOV (TUE)' value='6 NOV (TUE)' />
+                                            <Items label='7 NOV (WED)' value='7 NOV (WED)' />
+                                            <Items label='8 NOV (THU)' value='8 NOV (THU)' />
+                                            <Items label='9 NOV (FRI)' value='9 NOV (FRI)' />
+                                            <Items label='10 NOV (SAT)' value='10 NOV (SAT)' />
+                                            <Items label='11 NOV (SUN)' value='11 NOV (SUN)' />
+                                            <Items label='12 NOV (MON)' value='12 NOV (MON)' />
+                                            <Items label='13 NOV (TUE)' value='13 NOV (TUE)' />
+                                            <Items label='14 NOV (WED)' value='14 NOV (WED)' />
+                                            <Items label='15 NOV (THU)' value='15 NOV (THU)' />
+                                            <Items label='16 NOV (FRI)' value='16 NOV (FRI)' />
+                                        </Picker>
+                                    </Item>
+                                    <Item>
+                                        <Picker
+                                            mode='dropdown'
+                                            selectedValue={this.state.model.time}
+                                            onValueChange={this.onValueChangeTime}>
+                                            <Items label='11:00 AM' value='11:00 AM' />
+                                            <Items label='12:00 AM' value='12:00 AM' />
+                                            <Items label='1:00 AM' value='1:00 AM' />
+                                            <Items label='2:00 AM' value='2:00 AM' />
+                                            <Items label='3:00 AM' value='3:00 AM' />
+                                            <Items label='4:00 AM' value='4:00 AM' />
+                                            <Items label='5:00 AM' value='5:00 AM' />
+                                            <Items label='6:00 AM' value='6:00 AM' />
+                                            <Items label='7:00 AM' value='7:00 AM' />
+                                        </Picker>
+                                    </Item>
+                                    <Item>
+                                        <Input
+                                            placeholder="Title"
+                                            autoCapitalize='words'
+                                            ref='title'
+                                            required
+                                            underlineColorAndroid='transparent'
+                                            value={this.state.model.title}
+                                            onChangeText={text => this.setValue({ title: text })}
+                                        />
+                                    </Item>
+                                    <Item>
+                                        <Input
+                                            placeholder="First Name"
+                                            autoCapitalize='words'
+                                            ref='fname'
+                                            required
+                                            underlineColorAndroid='transparent'
+                                            value={this.state.model.first_name}
+                                            onChangeText={text => this.setValue({ first_name: text })}
+                                        />
+                                    </Item>
+                                    <Item>
+                                        <Input
+                                            placeholder="Last Name"
+                                            autoCapitalize='words'
+                                            ref='lname'
+                                            required
+                                            underlineColorAndroid='transparent'
+                                            value={this.state.model.last_name}
+                                            onChangeText={text => this.setValue({ last_name: text })}
+                                        />
+                                    </Item>
+                                    <Item>
+                                        <Input
+                                            keyboardType='email-address'
+                                            placeholder="Email"
+                                            autoCapitalize='none'
+                                            ref='mail'
+                                            required
+                                            underlineColorAndroid='transparent'
+                                            value={this.state.model.email}
+                                            onChangeText={text => this.setValue({ email: text })}
+                                        />
+                                    </Item>
+                                    <Item>
+                                        <Input
+                                            keyboardType='phone-pad'
+                                            placeholder="Country Code"
+                                            autoCapitalize='words'
+                                            ref='mail'
+                                            required
+                                            underlineColorAndroid='transparent'
+                                            value={this.state.model.country_code}
+                                            onChangeText={text => this.setValue({ country_code: text })}
+                                        />
+                                    </Item>
+                                    <Item>
+                                        <Input
+                                            keyboardType='phone-pad'
+                                            placeholder="Phone Number"
+                                            required
+                                            underlineColorAndroid='transparent'
+                                            value={this.state.model.mobile_number}
+                                            onChangeText={text => this.setValue({ mobile_number: text })}
+                                        />
+                                    </Item>
+                                    <ListItem>
+                                        <CheckBox
+                                            onPress={() => this.toggleCheckbox1()}
+                                            checked={checkboxes1} />
+                                        <Body>
+                                            <Text style={{ paddingLeft: 10 }}>I have read and agree to the Terms and Conditions and Privacy Policy.</Text>
+                                        </Body>
+                                    </ListItem>
+                                    <ListItem style={{ borderBottomWidth: 0 }}>
+                                        <CheckBox
+                                            onPress={() => this.toggleCheckbox2()}
+                                            checked={checkboxes2} />
+                                        <Body>
+                                            <Text style={{ paddingLeft: 10 }}>I would like to receive information about Cartier’s products or services.</Text>
+                                        </Body>
+                                    </ListItem>
+                                </Form>
+
+                                <View style={{ margin: 15, marginLeft: 0 }}>
+                                    <Button transparent dark onPress={this.handleSubmit} style={{ backgroundColor: '#fff' }} >
+                                        <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Reserve a slot</Text>
+                                    </Button>
+                                </View>
                             </View>
                         </View>
                     </ScrollView>
-                    {this.state.loading && <Loading />}
+                </Modal>
 
-                </View>
-            </Modal>
         );
     }
 }
@@ -213,10 +443,10 @@ const styles = StyleSheet.create({
         fontSize: 22,
         color: '#fff'
     },
-    customer: {
+    reserve: {
         flex: 1,
     },
-    customerInfo: {
+    reserveInfo: {
         flex: 1,
         padding: 10,
     },
@@ -256,7 +486,7 @@ const styles = StyleSheet.create({
     },
     checkBox: {
         paddingLeft: 20,
-        paddingRight: 5
+        paddingRight: 10
     }
-    
+
 });
