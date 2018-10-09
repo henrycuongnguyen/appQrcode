@@ -2,7 +2,7 @@
   "expo": {
     "name": "O Event",
     "description": "O Event",
-    "slug": "O Event",
+    "slug": "o-event",
     "privacy": "public",
     "sdkVersion": "30.0.0",
     "platforms": ["ios", "android"],

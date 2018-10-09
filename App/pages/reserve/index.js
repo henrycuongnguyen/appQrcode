@@ -249,7 +249,7 @@ class AllGuests extends Component {
     }
 
     renderItem = ({ item }) => {
-        console.log(item)
+        // console.log(item)
         return (
             <GuestsItem data={item} showBox={this.showBox} />
         );
