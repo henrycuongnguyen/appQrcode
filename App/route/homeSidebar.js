@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import MyStatusBar from '../pages/statusBar/MyStatusBar';
 const ios = Platform.OS === 'ios';
-const logo = require('../../assets/logo.png');
+const logo = require('../../assets/o-events.png');
 
 class MainSidebar extends Component {
     constructor(props) {
@@ -56,7 +56,7 @@ class MainSidebar extends Component {
     }
 
     render() {
-        let background = '#ffa06c';
+        let background = '#f3a76b';
 
         return (
             <View style={styles.container}>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     wrapLogo: {
         alignItems: 'center',
         padding: 10,
-        backgroundColor: '#ffa06c'
+        backgroundColor: '#f3a76b'
     },
     logo: {
         width: 50,

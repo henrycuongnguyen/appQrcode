@@ -107,6 +107,30 @@ ${mail}
                             <Item>
                                 <Input
                                     editable={false}
+                                    placeholder="Date"
+                                    autoCapitalize='words'
+                                    ref='date'
+                                    required
+                                    underlineColorAndroid='transparent'
+                                    value={data.acf.date[0]}
+                                    onChangeText={text => this.setValue({ date: text })}
+                                />
+                            </Item>
+                            <Item>
+                                <Input
+                                    editable={false}
+                                    placeholder="Time"
+                                    autoCapitalize='words'
+                                    ref='time'
+                                    required
+                                    underlineColorAndroid='transparent'
+                                    value={data.acf.time[0]}
+                                    onChangeText={text => this.setValue({ time: text })}
+                                />
+                            </Item>
+                            <Item>
+                                <Input
+                                    editable={false}
                                     placeholder="Title"
                                     autoCapitalize='words'
                                     ref='title'
@@ -197,6 +221,30 @@ ${mail}
                             <View style={styles.reserveInfoIpad}>
                                 <Form style={{ backgroundColor: '#fff' }}>
                                     <Text style={{ margin: 15, fontWeight: 'bold' }}>Guest Details</Text>
+                                    <Item>
+                                        <Input
+                                            editable={false}
+                                            placeholder="Date"
+                                            autoCapitalize='words'
+                                            ref='date'
+                                            required
+                                            underlineColorAndroid='transparent'
+                                            value={data.acf.date[0]}
+                                            onChangeText={text => this.setValue({ date: text })}
+                                        />
+                                    </Item>
+                                    <Item>
+                                        <Input
+                                            editable={false}
+                                            placeholder="Time"
+                                            autoCapitalize='words'
+                                            ref='time'
+                                            required
+                                            underlineColorAndroid='transparent'
+                                            value={data.acf.time[0]}
+                                            onChangeText={text => this.setValue({ time: text })}
+                                        />
+                                    </Item>
                                     <Item>
                                         <Input
                                             editable={false}

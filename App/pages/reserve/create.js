@@ -70,7 +70,9 @@ class CreateForm extends React.Component {
         var vPhone = this.state.model.mobile_number;
         var vCode = this.state.model.country_code;
         var vTitle = this.state.model.title;
-        if (vfName == '' || vlName == '' || vemail == '' || vPhone == '' || vCode == '' || vTitle == '') {
+        var vDate = this.state.model.date;
+        var vTime = this.state.model.time;
+        if (vfName == '' || vlName == '' || vemail == '' || vPhone == '' || vCode == '' || vTitle == '' || vDate == '' || vTime == '') {
             alert('Please enter full fields');
         } else {
             return axios({
@@ -78,6 +80,20 @@ class CreateForm extends React.Component {
                 url: myurl,
                 data: qs.stringify(this.state.model),
             }).then(response => {
+                this.setState({
+                    ...this.state,
+                    model: {
+                        title: '',
+                        first_name: '',
+                        last_name: '',
+                        email: '',
+                        country_code: '',
+                        mobile_number: '',
+                        date: '1 NOV (THU)',
+                        time: '11:00 AM',
+                    }
+                })
+                
                 Alert.alert(
                     'Thank you for your interest Ms Doe.',
                     `Your reservation has been submitted. We have sent a confirmation email to ${this.state.model.email}. We look forward to seeing you on ${this.state.model.date} at ${this.state.model.time}. Get ready to be dazzled!`,
@@ -91,18 +107,6 @@ class CreateForm extends React.Component {
                     ],
                     { cancelable: false }
                 )
-
-                this.setState({
-                    ...this.state,
-                    model: {
-                        title: '',
-                        first_name: '',
-                        last_name: '',
-                        email: '',
-                        country_code: '',
-                        mobile_number: '',
-                    }
-                })
 
             })
                 .catch(err => console.log('err', err));

@@ -13,6 +13,7 @@ import { API_URL } from '../constants/Config';
 const ios = Platform.OS === 'ios';
 const { height } = Dimensions.get('window');
 const { width } = Dimensions.get('window');
+import Loading from '../../controls/loading';
 class AllGuests extends Component {
     constructor(props, context) {
         super(props, context);
@@ -32,13 +33,19 @@ class AllGuests extends Component {
 
     componentDidMount() {
         var urlItem = `${API_URL}/wp-json/sections_endpoint/v2/reserves`;
+        this.setState({loading: true});
         return axios.get(`${urlItem}`).then(response => {
             this.setState({
-                data: response.data
+                data: response.data,
+                loading: false,
             })
             this.arrayholder = response.data;
         })
-            .catch(err => console.log(err));
+            .catch(err => {
+                this.setState({
+                    loading: false,
+                })
+            });
     }
 
     getActionMenu = () => {
@@ -74,15 +81,15 @@ class AllGuests extends Component {
         this.props.navigation.openDrawer();
     }
 
-    renderHeader = () => {
-        return (
-            <View>
-                {this.state.data.length == 0 &&
-                    <View style={{ alignItems: 'center' }}><Text style={{ padding: 10 }}>The list is empty</Text></View>
-                }
-            </View>
-        );
-    };
+    // renderHeader = () => {
+    //     return (
+    //         <View>
+    //             {this.state.data.length == 0 &&
+    //                 <View style={{ alignItems: 'center' }}><Text style={{ padding: 10 }}>The list is empty</Text></View>
+    //             }
+    //         </View>
+    //     );
+    // };
 
     searchFilterFunction = text => {
         const newData = this.arrayholder.filter(item => {
@@ -164,8 +171,8 @@ class AllGuests extends Component {
                         ></Toolbar>
                     }
                     <View>
-                        <Header searchBar rounded autoCorrect={false} style={[height >= 1024 ? { backgroundColor: '#fff' } : { backgroundColor: '#ffa06c' }]}>
-                            <Item style={[ios ? { padding: 5 } : { padding: 10 }]}>
+                        <Header searchBar rounded autoCorrect={false} style={[height >= 1024 ? { backgroundColor: '#fff' } : { backgroundColor: '#fff'}]}>
+                            <Item style={[ios ? { padding: 5 } : { padding: 10, backgroundColor: '#dedede' }]}>
                                 <Icon name="ios-search" style={{ fontSize: 20 }} />
                                 <Input
                                     onChangeText={text => this.searchFilterFunction(text)}
@@ -173,9 +180,9 @@ class AllGuests extends Component {
                                 />
                             </Item>
                         </Header>
-                        {/*this.state.data.length == 0 &&
+                        {this.state.data.length == 0 &&
                             <View style={{ alignItems: 'center' }}><Text style={{ padding: 10 }}>The list is empty</Text></View>
-                        */}
+                        }
                     </View>
                     {
                         <SectionList
@@ -192,7 +199,7 @@ class AllGuests extends Component {
                                     onRefresh={this.refresh}
                                 />
                             }
-                            ListHeaderComponent={this.renderHeader}
+                            // ListHeaderComponent={this.renderHeader}
                             keyExtractor={(item) => 'ID' + item.ID}
                         />
                     }
@@ -213,6 +220,9 @@ class AllGuests extends Component {
                             refresh={() => this.refresh()}
                             show={this.state.showCreate}
                         />
+                    }
+                    {
+                        this.state.loading && <Loading />
                     }
                 </View>
                 {
