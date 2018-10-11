@@ -79,7 +79,20 @@ class CreateForm extends React.Component {
                 method: 'POST',
                 url: myurl,
                 data: qs.stringify(this.state.model),
-            }).then(response => {
+            }).then(response => {                
+                Alert.alert(
+                    `Thank you for your interest ${this.state.model.last_name}.`,
+                    `Your reservation has been submitted. We have sent a confirmation email to ${this.state.model.email}. We look forward to seeing you on ${this.state.model.date} at ${this.state.model.time}. Get ready to be dazzled!`,
+                    [
+                        {
+                            text: 'OK', onPress: () => {
+                                this.props.refresh();
+                                this.props.onRequestClose();
+                            }
+                        },
+                    ],
+                    { cancelable: false }
+                )
                 this.setState({
                     ...this.state,
                     model: {
@@ -93,20 +106,6 @@ class CreateForm extends React.Component {
                         time: '11:00 AM',
                     }
                 })
-                
-                Alert.alert(
-                    'Thank you for your interest Ms Doe.',
-                    `Your reservation has been submitted. We have sent a confirmation email to ${this.state.model.email}. We look forward to seeing you on ${this.state.model.date} at ${this.state.model.time}. Get ready to be dazzled!`,
-                    [
-                        {
-                            text: 'OK', onPress: () => {
-                                this.props.refresh();
-                                this.props.onRequestClose();
-                            }
-                        },
-                    ],
-                    { cancelable: false }
-                )
 
             })
                 .catch(err => console.log('err', err));

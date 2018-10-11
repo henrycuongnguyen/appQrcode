@@ -5,7 +5,10 @@
     "slug": "o-event",
     "privacy": "public",
     "sdkVersion": "30.0.0",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,17 +31,17 @@
       "infoPlist": {
         "NSCameraUsageDescription": "The app needs permission to your camera in order to take and upload photos (such as avatars).",
         "NSPhotoLibraryUsageDescription": "The app needs permission to your camera roll in order to upload photos (such as avatars). The app only upload the images you are selected."
-    }
+      }
     },
     "android": {
       "versionCode": 1,
       "package": "com.oangle.dev",
       "icon": "./assets/icon-android.png",
-        "permissions": [
-            "CAMERA",
-            "READ_EXTERNAL_STORAGE",
-            "WRITE_EXTERNAL_STORAGE"
-        ]
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     }
   }
 }
