@@ -57,7 +57,7 @@ export default class App extends React.Component {
                         <View style={styles.focused}>
                             <Icon
                                 name="ios-qr-scanner"
-                                size={300}
+                                size={200}
                                 color='#fff'
                             />
                         </View>

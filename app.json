@@ -29,8 +29,7 @@
       "icon": "./assets/icon-ios.png",
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "The app needs permission to your camera in order to take and upload photos (such as avatars).",
-        "NSPhotoLibraryUsageDescription": "The app needs permission to your camera roll in order to upload photos (such as avatars). The app only upload the images you are selected."
+        "NSCameraUsageDescription": "The application needs permission for your camera to take pictures."
       }
     },
     "android": {
