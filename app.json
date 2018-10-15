@@ -34,7 +34,7 @@
         },
         "android": {
             "versionCode": 1,
-            "package": "com.oangle.0-event",
+            "package": "com.oangle.o-event",
             "icon": "./assets/icon-android.png",
             "permissions": [
                 "CAMERA",
