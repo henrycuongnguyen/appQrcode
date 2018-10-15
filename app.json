@@ -1,46 +1,46 @@
 {
-  "expo": {
-    "name": "O Event",
-    "description": "O Event",
-    "slug": "o-event",
-    "privacy": "public",
-    "sdkVersion": "30.0.0",
-    "platforms": [
-      "ios",
-      "android"
-    ],
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "buildNumber": "1",
-      "bundleIdentifier": "com.oangle.dev",
-      "icon": "./assets/icon-ios.png",
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSCameraUsageDescription": "The application needs permission for your camera to take pictures."
-      }
-    },
-    "android": {
-      "versionCode": 1,
-      "package": "com.oangle.dev",
-      "icon": "./assets/icon-android.png",
-      "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
-      ]
+    "expo": {
+        "name": "O Event",
+        "description": "O Event",
+        "slug": "o-event",
+        "privacy": "public",
+        "sdkVersion": "30.0.0",
+        "platforms": [
+            "ios",
+            "android"
+        ],
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+        },
+        "updates": {
+            "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": [
+            "**/*"
+        ],
+        "ios": {
+            "buildNumber": "1",
+            "bundleIdentifier": "com.oangle.o-event",
+            "icon": "./assets/icon-ios.png",
+            "supportsTablet": true,
+            "infoPlist": {
+                "NSCameraUsageDescription": "The application needs permission for your camera to scan QR code."
+            }
+        },
+        "android": {
+            "versionCode": 1,
+            "package": "com.oangle.0-event",
+            "icon": "./assets/icon-android.png",
+            "permissions": [
+                "CAMERA",
+                "READ_EXTERNAL_STORAGE",
+                "WRITE_EXTERNAL_STORAGE"
+            ]
+        }
     }
-  }
 }
