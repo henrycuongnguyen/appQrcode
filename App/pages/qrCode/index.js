@@ -71,6 +71,7 @@ export default class App extends React.Component {
                 <BoxInfo
                     data={this.state.currentInfo}
                     onRequestClose={() => this.setState({ showInfo: false })}
+                    goHome={this.onCloseCamera}
                     show={this.state.showInfo}
                 />
             </View>

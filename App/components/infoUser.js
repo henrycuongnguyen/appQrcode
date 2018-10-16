@@ -4,7 +4,7 @@ import {
     Dimensions, Linking, StyleSheet, ScrollView, Alert,
     TouchableOpacity, Image, Modal, TextInput, Switch, View, Text, Platform
 } from 'react-native';
-import { Button } from 'native-base';
+import { Button, Spinner } from 'native-base';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 const ios = Platform.OS === 'ios';
 import axios from 'axios';
@@ -22,20 +22,30 @@ class InfoUser extends React.Component {
     componentDidMount() {
     }
 
-    onFetchPost(id, url) {
+    onFetchPost = (id, url) => {
+        this.setState({ loading: true })
         return axios.get(`${url}`, {
             params: {
                 ID: id,
                 checkedIn: true
             }
         }).then(response => {
+            this.setState({ loading: false })
+            this.handleClose(null, true);
             alert('Checkedin')
         })
-            .catch(err => console.log(err));
+            .catch(err => {
+                alert('An error has occurred, please try again');
+                this.setState({ loading: false })
+                console.log(err)
+            });
     }
 
-    handleClose = () => {
-        if (this.props.onRequestClose) {
+    handleClose = (e, goHome) => {
+        if (goHome && this.props.goHome) {
+            this.props.goHome();
+        }
+        else if (this.props.onRequestClose) {
             this.props.onRequestClose();
         }
     }
@@ -73,13 +83,6 @@ class InfoUser extends React.Component {
                     elevation={2}
                     icon={<Icon name='arrow-back' style={styles.icon} />}
                     onIconPress={this.handleClose}
-                    // actions={[
-                    //     {
-                    //         icon: <Icon name='save' style={styles.icon} />,
-                    //         onPress: () => this.handleSubmit(dataStr.post_id, dataStr.url),
-                    //         disabled: this.state.loading
-                    //     }
-                    // ]}
                     titleText='Confirm Check-In'
                     style={styles.toolbar}
                 ></Toolbar>
@@ -90,27 +93,60 @@ class InfoUser extends React.Component {
                             {!!dataStr ?
                                 <View>
                                     <View>
-                                        <Text style={styles.textFild}>Date: {dataStr.date}</Text>
-                                        <Text style={styles.textFild}>Time: {dataStr.time}</Text>
-                                        <Text style={styles.textFild}>Title: {dataStr.title}</Text>
-                                        <Text style={styles.textFild}>First name: {dataStr.first_name}</Text>
-                                        <Text style={styles.textFild}>Last name : {dataStr.last_name}</Text>
-                                        <Text style={styles.textFild}>Email: {dataStr.email}</Text>
-                                        <Text style={styles.textFild}>Country code: {dataStr.country_code}</Text>
-                                        <Text style={styles.textFild}>Mobile number: {dataStr.mobile_number}</Text>
+                                        <View style={styles.item}>
+                                            <Text style={styles.label}>Date</Text>
+                                            <Text style={styles.value}>{dataStr.date}</Text>
+                                        </View>
+                                        <View style={styles.item}>
+                                            <Text style={styles.label}>Time</Text>
+                                            <Text style={styles.value}>{dataStr.time}</Text>
+                                        </View>
+                                        <View style={styles.item}>
+                                            <Text style={styles.label}>Title</Text>
+                                            <Text style={styles.value}>{dataStr.title}</Text>
+                                        </View>
+                                        <View style={styles.item}>
+                                            <Text style={styles.label}>Firstname</Text>
+                                            <Text style={styles.value}>{dataStr.first_name}</Text>
+                                        </View>
+                                        <View style={styles.item}>
+                                            <Text style={styles.label}>Lastname</Text>
+                                            <Text style={styles.value}>{dataStr.last_name}</Text>
+                                        </View>
+                                        <View style={styles.item}>
+                                            <Text style={styles.label}>Email</Text>
+                                            <Text style={styles.value}>{dataStr.email}</Text>
+                                        </View>
+                                        <View style={styles.item}>
+                                            <Text style={styles.label}>Country code</Text>
+                                            <Text style={styles.value}>{dataStr.country_code}</Text>
+                                        </View>
+                                        <View style={styles.item}>
+                                            <Text style={styles.label}>Mobile number</Text>
+                                            <Text style={styles.value}>{dataStr.mobile_number}</Text>
+                                        </View>
                                     </View>
 
-                                    <Button transparent dark
+                                    <Button transparent dark block
                                         onPress={() => this.handleSubmit(dataStr.post_id, dataStr.url)}
-                                        style={{ backgroundColor: '#fff', marginLeft: 5, marginTop: 15 }} >
-                                        <Text style={{ paddingLeft: 10, paddingRight: 10, fontWeight: 'bold' }}>Confirm Check-In</Text>
+                                        style={{ backgroundColor: '#fff', marginTop: 15 }} >
+                                        {
+                                            this.state.loading ? <Spinner /> : (
+                                                <Text style={{ paddingLeft: 10, paddingRight: 10, fontWeight: 'bold' }}>Confirm Check-In</Text>
+                                            )
+                                        }
                                     </Button>
                                 </View>
                                 :
                                 <View>
                                     <Text style={{ textAlign: 'center', paddingTop: 15 }}>
-                                        Url qrcode is not formatted
+                                        Sorry, this QR code is invalid.
                                     </Text>
+                                    <Button transparent dark block
+                                        onPress={this.handleClose}
+                                        style={{ backgroundColor: '#fff', marginTop: 15 }} >
+                                        <Text style={{ paddingLeft: 10, paddingRight: 10, fontWeight: 'bold' }}>Scan another one</Text>
+                                    </Button>
                                 </View>
                             }
                         </View>
@@ -144,14 +180,22 @@ const styles = StyleSheet.create({
     toolbar: {
         backgroundColor: '#ffa06c'
     },
-    prop: {
+    item: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 5
+        height: 50,
+        backgroundColor: '#fff',
+        borderBottomColor: '#f2f2f2',
+        borderBottomWidth: StyleSheet.hairlineWidth
     },
-    textFild: {
-        fontSize: 18,
-        paddingLeft: 5
+    label: {
+        flex: 1,
+        paddingLeft: 10
+    },
+    value: {
+        flex: 3,
+        paddingLeft: 10,
+        color: '#888'
     },
     select: {
         height: 40,
