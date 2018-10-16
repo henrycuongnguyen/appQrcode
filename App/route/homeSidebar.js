@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import MyStatusBar from '../pages/statusBar/MyStatusBar';
 const ios = Platform.OS === 'ios';
-const logo = require('../../assets/o-events.png');
+const logo = require('../../assets/icon-ios.png');
 
 class MainSidebar extends Component {
     constructor(props) {
@@ -26,7 +26,7 @@ class MainSidebar extends Component {
             return false;
         }
         if (scene.route.key == 'Logout') {
-           console.log('logout')
+            console.log('logout')
         }
         else {
             base(scene);
@@ -65,7 +65,7 @@ class MainSidebar extends Component {
                         barStyle="light-content"
                         backgroundColor={background}
                     />
-                    <View style = {styles.wrapLogo}>
+                    <View style={styles.wrapLogo}>
                         <Image
                             style={styles.stretch}
                             source={logo}
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     wrapLogo: {
         alignItems: 'center',
         padding: 10,
-        backgroundColor: '#f3a76b'
+        backgroundColor: '#f89f6d'
     },
     logo: {
         width: 50,

@@ -15,7 +15,7 @@
         "splash": {
             "image": "./assets/splash.png",
             "resizeMode": "contain",
-            "backgroundColor": "#ffffff"
+            "backgroundColor": "#f89f6d"
         },
         "updates": {
             "fallbackToCacheTimeout": 0
@@ -25,7 +25,7 @@
         ],
         "ios": {
             "buildNumber": "1",
-            "bundleIdentifier": "com.oangle.o-event",
+            "bundleIdentifier": "com.oangle.oevent",
             "icon": "./assets/icon-ios.png",
             "supportsTablet": true,
             "infoPlist": {
@@ -33,9 +33,13 @@
             }
         },
         "android": {
-            "versionCode": 1,
-            "package": "com.oangle.o-event",
+            "versionCode": 2,
+            "package": "com.oangle.oevent",
             "icon": "./assets/icon-android.png",
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/icon-android-foreground.png",
+                "backgroundColor": "#f89f6d"
+            },
             "permissions": [
                 "CAMERA",
                 "READ_EXTERNAL_STORAGE",
