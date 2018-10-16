@@ -45,6 +45,7 @@ class InfoUser extends React.Component {
     }
 
     render() {
+        console.log('');
         var dataStr = '';
         if (this.props.data) {
             // dataStr = JSON.parse(this.props.data.data);
