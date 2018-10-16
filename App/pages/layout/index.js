@@ -12,20 +12,19 @@ class Layout extends Component {
         }
     }
 
-    // componentDidMount() {
-    //     AsyncStorage.getItem('access_token').then(() => {
-    //         this.setState({
-    //             loggedIn: true,
-    //         })
-    //     }).catch(() => {
-    //         this.setState({
-    //             loggedIn: false,
-    //         })
-    //     })
-    // }
+    componentDidMount() {
+        AsyncStorage.getItem('access_token', (err, result) => {
+            console.log(result);
+            if (result == 'loggedin') {
+                this.setState({
+                    loggedIn: true
+                })
+            }
+        });
+    }
 
     login = (data) => {
-        if (data == 'loggedin' || AsyncStorage.getItem('access_token')) {
+        if (data == 'loggedin') {
             this.setState({
                 loggedIn: true
             })

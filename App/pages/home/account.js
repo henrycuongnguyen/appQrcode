@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Dimensions, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, Dimensions, TouchableOpacity, Text, AsyncStorage } from 'react-native';
 import {
     View, Container, Form, Button, Thumbnail, Spinner, Item, Input
 } from 'native-base';
@@ -14,7 +14,7 @@ class Login extends React.Component {
         super(props);
         this.state = {
             username: "",
-            password: "",
+            password: "oa@dev#lovewhatyoudo!",
             loading: false,
             email: "",
             msg: '',
@@ -36,7 +36,8 @@ class Login extends React.Component {
                     AsyncStorage.setItem('access_token', 'loggedin');
                     this.props.login('loggedin');
                 }
-            }).catch((e) => { this.setState({ loading: false, msg: 'Incorrect account' }) })
+            })
+                .catch((e) => { this.setState({ loading: false, msg: 'Incorrect account' }) })
         } else {
             this.setState({ msg: 'Please enter full fields' });
         }
