@@ -32,31 +32,59 @@ class DetailForm extends React.Component {
         console.log('sc')
     }
 
+    onFetchUndo(id, fname, lname, mail, phone) {
+        Alert.alert(
+            'Guest Details',
+            'Undo checked',
+            [
+                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                {
+                    text: 'OK', onPress: () => {
+                        return axios.get(API_URL, {
+                            params: {
+                                ID: id,
+                                checkedIn: false
+                            }
+                        }).then(response => {
+                            this.props.refresh();
+                            this.props.onRequestClose();
+                            // alert('Undo Success')
+                        })
+                            .catch(err => console.log(err));
+                    }
+                },
+            ],
+            { cancelable: false }
+        )
+    }
+
     onFetchPost(id, fname, lname, mail, phone) {
-            Alert.alert(
-                'Guest Details',
-`${fname} ${lname}
+        Alert.alert(
+            'Guest Details',
+            `${fname} ${lname}
 + ${phone}
 ${mail}
                 `,
-                [
-                    { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-                    {
-                        text: 'OK', onPress: () => {
-                            return axios.get(API_URL, {
-                                params: {
-                                    ID: id,
-                                    checkedIn: true
-                                }
-                            }).then(response => {
-                                alert('Checked')
-                            })
-                                .catch(err => console.log(err));
-                        }
-                    },
-                ],
-                { cancelable: false }
-            )
+            [
+                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                {
+                    text: 'OK', onPress: () => {
+                        return axios.get(API_URL, {
+                            params: {
+                                ID: id,
+                                checkedIn: true
+                            }
+                        }).then(response => {
+                            this.props.refresh();
+                            this.props.onRequestClose();
+                            // alert('Checkin Success')
+                        })
+                            .catch(err => console.log(err));
+                    }
+                },
+            ],
+            { cancelable: false }
+        )
     }
 
     onDeletePost(id) {
@@ -91,7 +119,7 @@ ${mail}
 
         return (
             this.props.showDetailIpad ?
-                <View style = {{backgroundColor: '#f5f5f5', flex: 1 }}>
+                <View style={{ backgroundColor: '#f5f5f5', flex: 1 }}>
                     <Header style={{ backgroundColor: '#ffa06c', borderBottomWidth: 0 }}>
                         <Left />
                         <Body>
@@ -101,228 +129,248 @@ ${mail}
                     </Header>
 
                     <View style={{ padding: 15, backgroundColor: '#f5f5f5' }}>
-                    <View style={styles.reserveInfoIpad}>
-                        <Form style={{ backgroundColor: '#fff' }}>
-                            <Text style={{ margin: 15, fontWeight: 'bold' }}>Guest Details</Text>
-                            <Item>
-                                <Input
-                                    editable={false}
-                                    placeholder="Date"
-                                    autoCapitalize='words'
-                                    ref='date'
-                                    required
-                                    underlineColorAndroid='transparent'
-                                    value={data.acf.date[0]}
-                                    onChangeText={text => this.setValue({ date: text })}
-                                />
-                            </Item>
-                            <Item>
-                                <Input
-                                    editable={false}
-                                    placeholder="Time"
-                                    autoCapitalize='words'
-                                    ref='time'
-                                    required
-                                    underlineColorAndroid='transparent'
-                                    value={data.acf.time[0]}
-                                    onChangeText={text => this.setValue({ time: text })}
-                                />
-                            </Item>
-                            <Item>
-                                <Input
-                                    editable={false}
-                                    placeholder="Title"
-                                    autoCapitalize='words'
-                                    ref='title'
-                                    required
-                                    underlineColorAndroid='transparent'
-                                    value={data.acf.title[0]}
-                                    onChangeText={text => this.setValue({ title: text })}
-                                />
-                            </Item>
-                            <Item>
-                                <Input
-                                    editable={false}
-                                    placeholder="First Name"
-                                    autoCapitalize='words'
-                                    ref='fname'
-                                    required
-                                    underlineColorAndroid='transparent'
-                                    value={data.acf.first_name[0]}
-                                    onChangeText={text => this.setValue({ first_name: text })}
-                                />
-                            </Item>
-                            <Item>
-                                <Input
-                                    editable={false}
-                                    placeholder="Last Name"
-                                    autoCapitalize='words'
-                                    ref='lname'
-                                    required
-                                    underlineColorAndroid='transparent'
-                                    value={data.acf.last_name[0]}
-                                    onChangeText={text => this.setValue({ last_name: text })}
-                                />
-                            </Item>
-                            <Item>
-                                <Input
-                                    editable={false}
-                                    keyboardType='email-address'
-                                    placeholder="Email"
-                                    autoCapitalize='none'
-                                    ref='mail'
-                                    required
-                                    underlineColorAndroid='transparent'
-                                    value={data.acf.email[0]}
-                                    onChangeText={text => this.setValue({ email: text })}
-                                />
-                            </Item>
+                        <View style={styles.reserveInfoIpad}>
+                            <Form style={{ backgroundColor: '#fff' }}>
+                                <Text style={{ margin: 15, fontWeight: 'bold' }}>Guest Details</Text>
+                                <Item>
+                                    <Input
+                                        editable={false}
+                                        placeholder="Date"
+                                        autoCapitalize='words'
+                                        ref='date'
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={data.acf.date[0]}
+                                        onChangeText={text => this.setValue({ date: text })}
+                                    />
+                                </Item>
+                                <Item>
+                                    <Input
+                                        editable={false}
+                                        placeholder="Time"
+                                        autoCapitalize='words'
+                                        ref='time'
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={data.acf.time[0]}
+                                        onChangeText={text => this.setValue({ time: text })}
+                                    />
+                                </Item>
+                                <Item>
+                                    <Input
+                                        editable={false}
+                                        placeholder="Title"
+                                        autoCapitalize='words'
+                                        ref='title'
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={data.acf.title[0]}
+                                        onChangeText={text => this.setValue({ title: text })}
+                                    />
+                                </Item>
+                                <Item>
+                                    <Input
+                                        editable={false}
+                                        placeholder="First Name"
+                                        autoCapitalize='words'
+                                        ref='fname'
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={data.acf.first_name[0]}
+                                        onChangeText={text => this.setValue({ first_name: text })}
+                                    />
+                                </Item>
+                                <Item>
+                                    <Input
+                                        editable={false}
+                                        placeholder="Last Name"
+                                        autoCapitalize='words'
+                                        ref='lname'
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={data.acf.last_name[0]}
+                                        onChangeText={text => this.setValue({ last_name: text })}
+                                    />
+                                </Item>
+                                <Item>
+                                    <Input
+                                        editable={false}
+                                        keyboardType='email-address'
+                                        placeholder="Email"
+                                        autoCapitalize='none'
+                                        ref='mail'
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={data.acf.email[0]}
+                                        onChangeText={text => this.setValue({ email: text })}
+                                    />
+                                </Item>
 
-                            <Item style={{ borderBottomWidth: 0 }}>
-                                <Input
-                                    editable={false}
-                                    keyboardType='phone-pad'
-                                    placeholder="Phone Number"
-                                    required
-                                    underlineColorAndroid='transparent'
-                                    value={data.acf.mobile_number[0]}
-                                    onChangeText={text => this.setValue({ mobile_number: text })}
-                                />
-                            </Item>
-                        </Form>
+                                <Item style={{ borderBottomWidth: 0 }}>
+                                    <Input
+                                        editable={false}
+                                        keyboardType='phone-pad'
+                                        placeholder="Phone Number"
+                                        required
+                                        underlineColorAndroid='transparent'
+                                        value={data.acf.mobile_number[0]}
+                                        onChangeText={text => this.setValue({ mobile_number: text })}
+                                    />
+                                </Item>
+                            </Form>
 
-                        <View style={{ marginTop: 30, marginLeft: 0, flexDirection: 'row' }}>
-                            <Button transparent dark
-                                onPress={() => this.onFetchPost(data.ID, data.acf.first_name[0], data.acf.last_name[0], data.acf.email[0], data.acf.mobile_number[0])}
-                                style={{ backgroundColor: '#fff' }} >
-                                <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Confirm Check-In</Text>
-                            </Button>
-                            <Button transparent dark onPress={() => this.onDeletePost(data.ID)} style={{ backgroundColor: '#fff', marginLeft: 15 }} >
-                                <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Delete Reservation</Text>
-                            </Button>
+                            <View style={{ marginTop: 30, marginLeft: 0, flexDirection: 'row' }}>
+                                {
+                                    data.acf.attendance[0] == '0' ?
+
+                                        <Button transparent dark
+                                            onPress={() => this.onFetchPost(data.ID, data.acf.first_name[0], data.acf.last_name[0], data.acf.email[0], data.acf.mobile_number[0])}
+                                            style={{ backgroundColor: '#fff' }} >
+                                            <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Confirm Check-In</Text>
+                                        </Button>
+                                        :
+                                        <Button transparent dark
+                                            onPress={() => this.onFetchUndo(data.ID, data.acf.first_name[0], data.acf.last_name[0], data.acf.email[0], data.acf.mobile_number[0])}
+                                            style={{ backgroundColor: '#fff' }} >
+                                            <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Revert Check-In</Text>
+                                        </Button>
+                                }
+                                <Button transparent dark onPress={() => this.onDeletePost(data.ID)} style={{ backgroundColor: '#fff', marginLeft: 15 }} >
+                                    <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Delete Reservation</Text>
+                                </Button>
+                            </View>
                         </View>
                     </View>
                 </View>
-                </View>
                 :
-            <Modal
-                supportedOrientations={['portrait', 'landscape']}
-                onRequestClose={this.handleClose} >
-                <Toolbar
-                    elevation={2}
-                    icon={<Icon name='arrow-back' style={styles.icon} />}
-                    onIconPress={this.handleClose}
-                    titleText='Infomation'
-                    style={styles.toolbar}
-                ></Toolbar>
-                <View style={styles.customer}>
-                    <ScrollView keyboardShouldPersistTaps='always'>
-                        <View style={{ padding: 15, backgroundColor: '#f5f5f5' }}>
-                            <View style={styles.reserveInfoIpad}>
-                                <Form style={{ backgroundColor: '#fff' }}>
-                                    <Text style={{ margin: 15, fontWeight: 'bold' }}>Guest Details</Text>
-                                    <Item>
-                                        <Input
-                                            editable={false}
-                                            placeholder="Date"
-                                            autoCapitalize='words'
-                                            ref='date'
-                                            required
-                                            underlineColorAndroid='transparent'
-                                            value={data.acf.date[0]}
-                                            onChangeText={text => this.setValue({ date: text })}
-                                        />
-                                    </Item>
-                                    <Item>
-                                        <Input
-                                            editable={false}
-                                            placeholder="Time"
-                                            autoCapitalize='words'
-                                            ref='time'
-                                            required
-                                            underlineColorAndroid='transparent'
-                                            value={data.acf.time[0]}
-                                            onChangeText={text => this.setValue({ time: text })}
-                                        />
-                                    </Item>
-                                    <Item>
-                                        <Input
-                                            editable={false}
-                                            placeholder="Title"
-                                            autoCapitalize='words'
-                                            ref='title'
-                                            required
-                                            underlineColorAndroid='transparent'
-                                            value={data.acf.title[0]}
-                                            onChangeText={text => this.setValue({ title: text })}
-                                        />
-                                    </Item>
-                                    <Item>
-                                        <Input
-                                            editable={false}
-                                            placeholder="First Name"
-                                            autoCapitalize='words'
-                                            ref='fname'
-                                            required
-                                            underlineColorAndroid='transparent'
-                                            value={data.acf.first_name[0]}
-                                            onChangeText={text => this.setValue({ first_name: text })}
-                                        />
-                                    </Item>
-                                    <Item>
-                                        <Input
-                                            editable={false}
-                                            placeholder="Last Name"
-                                            autoCapitalize='words'
-                                            ref='lname'
-                                            required
-                                            underlineColorAndroid='transparent'
-                                            value={data.acf.last_name[0]}
-                                            onChangeText={text => this.setValue({ last_name: text })}
-                                        />
-                                    </Item>
-                                    <Item>
-                                        <Input
-                                            editable={false}
-                                            keyboardType='email-address'
-                                            placeholder="Email"
-                                            autoCapitalize='none'
-                                            ref='mail'
-                                            required
-                                            underlineColorAndroid='transparent'
-                                            value={data.acf.email[0]}
-                                            onChangeText={text => this.setValue({ email: text })}
-                                        />
-                                    </Item>
+                <Modal
+                    supportedOrientations={['portrait', 'landscape']}
+                    onRequestClose={this.handleClose} >
+                    <Toolbar
+                        elevation={2}
+                        icon={<Icon name='arrow-back' style={styles.icon} />}
+                        onIconPress={this.handleClose}
+                        titleText='Infomation'
+                        style={styles.toolbar}
+                    ></Toolbar>
+                    <View style={styles.customer}>
+                        <ScrollView keyboardShouldPersistTaps='always'>
+                            <View style={{ padding: 15, backgroundColor: '#f5f5f5' }}>
+                                <View style={styles.reserveInfoIpad}>
+                                    <Form style={{ backgroundColor: '#fff' }}>
+                                        <Text style={{ margin: 15, fontWeight: 'bold' }}>Guest Details</Text>
+                                        <Item>
+                                            <Input
+                                                editable={false}
+                                                placeholder="Date"
+                                                autoCapitalize='words'
+                                                ref='date'
+                                                required
+                                                underlineColorAndroid='transparent'
+                                                value={data.acf.date[0]}
+                                                onChangeText={text => this.setValue({ date: text })}
+                                            />
+                                        </Item>
+                                        <Item>
+                                            <Input
+                                                editable={false}
+                                                placeholder="Time"
+                                                autoCapitalize='words'
+                                                ref='time'
+                                                required
+                                                underlineColorAndroid='transparent'
+                                                value={data.acf.time[0]}
+                                                onChangeText={text => this.setValue({ time: text })}
+                                            />
+                                        </Item>
+                                        <Item>
+                                            <Input
+                                                editable={false}
+                                                placeholder="Title"
+                                                autoCapitalize='words'
+                                                ref='title'
+                                                required
+                                                underlineColorAndroid='transparent'
+                                                value={data.acf.title[0]}
+                                                onChangeText={text => this.setValue({ title: text })}
+                                            />
+                                        </Item>
+                                        <Item>
+                                            <Input
+                                                editable={false}
+                                                placeholder="First Name"
+                                                autoCapitalize='words'
+                                                ref='fname'
+                                                required
+                                                underlineColorAndroid='transparent'
+                                                value={data.acf.first_name[0]}
+                                                onChangeText={text => this.setValue({ first_name: text })}
+                                            />
+                                        </Item>
+                                        <Item>
+                                            <Input
+                                                editable={false}
+                                                placeholder="Last Name"
+                                                autoCapitalize='words'
+                                                ref='lname'
+                                                required
+                                                underlineColorAndroid='transparent'
+                                                value={data.acf.last_name[0]}
+                                                onChangeText={text => this.setValue({ last_name: text })}
+                                            />
+                                        </Item>
+                                        <Item>
+                                            <Input
+                                                editable={false}
+                                                keyboardType='email-address'
+                                                placeholder="Email"
+                                                autoCapitalize='none'
+                                                ref='mail'
+                                                required
+                                                underlineColorAndroid='transparent'
+                                                value={data.acf.email[0]}
+                                                onChangeText={text => this.setValue({ email: text })}
+                                            />
+                                        </Item>
 
-                                    <Item style={{ borderBottomWidth: 0 }}>
-                                        <Input
-                                            editable={false}
-                                            keyboardType='phone-pad'
-                                            placeholder="Phone Number"
-                                            required
-                                            underlineColorAndroid='transparent'
-                                            value={data.acf.mobile_number[0]}
-                                            onChangeText={text => this.setValue({ mobile_number: text })}
-                                        />
-                                    </Item>
-                                </Form>
+                                        <Item style={{ borderBottomWidth: 0 }}>
+                                            <Input
+                                                editable={false}
+                                                keyboardType='phone-pad'
+                                                placeholder="Phone Number"
+                                                required
+                                                underlineColorAndroid='transparent'
+                                                value={data.acf.mobile_number[0]}
+                                                onChangeText={text => this.setValue({ mobile_number: text })}
+                                            />
+                                        </Item>
+                                    </Form>
 
-                                <View style={{ marginTop: 30, marginLeft: 0, flexDirection: 'row' }}>
-                                    <Button transparent dark
-                                        onPress={() => this.onFetchPost(data.ID, data.acf.first_name[0], data.acf.last_name[0], data.acf.email[0], data.acf.mobile_number[0])}
-                                        style={{ backgroundColor: '#fff' }} >
-                                        <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Confirm Check-In</Text>
-                                    </Button>
-                                    <Button transparent dark onPress={() => this.onDeletePost(data.ID)} style={{ backgroundColor: '#fff', marginLeft: 15 }} >
-                                        <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Delete Reservation</Text>
-                                    </Button>
+                                    <View style={{ marginTop: 30, marginLeft: 0, flexDirection: 'row' }}>
+                                        {
+                                            data.acf.attendance[0] == '0' ?
+
+                                                <Button transparent dark
+                                                    onPress={() => this.onFetchPost(data.ID, data.acf.first_name[0], data.acf.last_name[0], data.acf.email[0], data.acf.mobile_number[0])}
+                                                    style={{ backgroundColor: '#fff' }} >
+                                                    <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Confirm Check-In</Text>
+                                                </Button>
+                                                :
+                                                <Button transparent dark
+                                                    onPress={() => this.onFetchUndo(data.ID, data.acf.first_name[0], data.acf.last_name[0], data.acf.email[0], data.acf.mobile_number[0])}
+                                                    style={{ backgroundColor: '#fff' }} >
+                                                    <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Revert Check-In</Text>
+                                                </Button>
+                                        }
+                                        <Button transparent dark onPress={() => this.onDeletePost(data.ID)} style={{ backgroundColor: '#fff', marginLeft: 15 }} >
+                                            <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Delete Reservation</Text>
+                                        </Button>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                    </ScrollView>
-                </View>
-            </Modal>
+                        </ScrollView>
+                    </View>
+                </Modal>
         );
     }
 }

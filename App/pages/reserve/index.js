@@ -120,9 +120,9 @@ class AllGuests extends Component {
     }
 
     render() {
-        console.log('====================================')
-        console.log(this.state.data, '-')
-        console.log('====================================')
+        // console.log('====================================')
+        // console.log(this.state.data, '-')
+        // console.log('====================================')
         const dataSection = {};
         this.state.data.map(item => {
             const key = `${item.post_title.charAt(0).toUpperCase()}`;

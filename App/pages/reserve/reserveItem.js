@@ -23,7 +23,7 @@ class ReserveItem extends PureComponent {
                     <Avatar url={null} name={!!data.acf.last_name && data.acf.last_name[0]} id={(data.ID)} />
                     <View style={styles.customerInfo}>
                         <Text style={styles.customerTitle} ellipsizeMode='tail' numberOfLines={1}>
-                            {data.acf.first_name +' '+ data.acf.last_name}
+                            {data.acf.first_name + ' ' + data.acf.last_name}
                         </Text>
 
                         {
@@ -43,6 +43,17 @@ class ReserveItem extends PureComponent {
                             )
                         }
                     </View>
+                    {
+                        !this.props.hideActionButton && !!data.acf.attendance && data.acf.attendance[0] == '1' && (
+                            <View style={styles.revAction}>
+                                <RsTouchableNativeFeedback rippleBorderless={true}>
+                                    <View>
+                                        <Icon type='MaterialIcons' name="done" size={25} style={styles.revActionIcon} />
+                                    </View>
+                                </RsTouchableNativeFeedback>
+                            </View>
+                        )
+                    }
                 </View>
             </RsTouchableNativeFeedback>
         );
@@ -115,5 +126,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 4,
         padding: 3
-    }
+    },
+    revAction: {
+        padding: 7,
+    },
+    revActionIcon: {
+        flex: 1,
+        padding: 3,
+        fontSize: 25
+    },
 });
