@@ -33,7 +33,7 @@ class AllGuests extends Component {
 
     componentDidMount() {
         var urlItem = `${API_URL}/wp-json/sections_endpoint/v2/reserves`;
-        this.setState({loading: true});
+        this.setState({ loading: true });
         return axios.get(`${urlItem}`).then(response => {
             this.setState({
                 data: response.data,
@@ -120,23 +120,26 @@ class AllGuests extends Component {
     }
 
     render() {
+        console.log('====================================')
+        console.log(this.state.data, '-')
+        console.log('====================================')
         const dataSection = {};
         this.state.data.map(item => {
             const key = `${item.post_title.charAt(0).toUpperCase()}`;
             if (!dataSection[key]) {
                 dataSection[key] = [];
             }
-            dataSection[key].push( item )
+            dataSection[key].push(item)
         });
         const ordered = {};
-        Object.keys(dataSection).sort().forEach(function(key) {
-          ordered[key] = dataSection[key];
+        Object.keys(dataSection).sort().forEach(function (key) {
+            ordered[key] = dataSection[key];
         });
-   
+
         const actions = this.getActionMenu();
         const sections = Object.keys(ordered).map(key => {
             return {
-                title:key,
+                title: key,
                 data: ordered[key]
             }
         })
@@ -171,7 +174,7 @@ class AllGuests extends Component {
                         ></Toolbar>
                     }
                     <View>
-                        <Header searchBar rounded autoCorrect={false} style={[height >= 1024 ? { backgroundColor: '#fff' } : { backgroundColor: '#fff'}]}>
+                        <Header searchBar rounded autoCorrect={false} style={[height >= 1024 ? { backgroundColor: '#fff' } : { backgroundColor: '#fff' }]}>
                             <Item style={[ios ? { padding: 5 } : { padding: 10, backgroundColor: '#dedede' }]}>
                                 <Icon name="ios-search" style={{ fontSize: 20 }} />
                                 <Input
