@@ -32,7 +32,9 @@ class InfoUser extends React.Component {
         }).then(response => {
             this.setState({ loading: false })
             this.handleClose(null, true);
-            alert('Checkedin')
+            setTimeout(()=>{
+                alert('Checkedin')
+            }, 200)
         })
             .catch(err => {
                 alert('An error has occurred, please try again');
@@ -178,7 +180,8 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     toolbar: {
-        backgroundColor: '#ffa06c'
+        backgroundColor: '#ffa06c',
+        paddingTop: ios ? 20 : 0
     },
     item: {
         flexDirection: 'row',

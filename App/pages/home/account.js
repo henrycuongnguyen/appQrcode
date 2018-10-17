@@ -39,10 +39,14 @@ class Login extends React.Component {
                     this.props.login('loggedin');
                 }
                 else {
+                    console.log('sai pass', this.state.password)
                     this.setState({ loading: false, msg: 'Incorrect account' })
                 }
             })
-                .catch((e) => { this.setState({ loading: false, msg: 'Incorrect account' }) })
+                .catch((e) => { 
+                    this.setState({ loading: false, msg: 'Incorrect account' });
+                    console.log('sai pass', this.state.password, e)
+                })
         } else {
             this.setState({ msg: 'Please enter full fields' });
         }

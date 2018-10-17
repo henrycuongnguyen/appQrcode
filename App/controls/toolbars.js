@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 import Menu from './action-menu';
 import RsTouchableNativeFeedback from './touchable-native-feedback';
+import MyStatusBar from '../pages/statusBar/MyStatusBar';
+import { Constants } from 'expo';
 
 import {
     Animated,
@@ -143,7 +145,7 @@ export default Toolbar;
 
 const styles = StyleSheet.create({
     toolbar: {
-        minHeight: 48,
+        minHeight: 48 ,
         backgroundColor: '#4CAF50',
         elevation: 2,
         shadowColor: 'black',
@@ -153,13 +155,7 @@ const styles = StyleSheet.create({
             height: 1,
             width: 0
         },
-        justifyContent: 'center',
-        ...Platform.select({
-            ios: {
-                paddingTop: 25,
-                zIndex: 1
-            }
-        })
+        justifyContent: 'center'
     },
     toolbarContent: {
         flexDirection: 'row',

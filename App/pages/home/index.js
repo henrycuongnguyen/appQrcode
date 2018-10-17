@@ -2,9 +2,10 @@ import React from 'react';
 import { StyleSheet, View, Text, Platform, StatusBar, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import Toolbar from '../../controls/toolbars';
-import MyStatusBar from '../statusBar/MyStatusBar';
 import Create from '../reserve/create';
-const { height } = Dimensions.get('window');
+import MyStatusBar from '../statusBar/MyStatusBar';
+
+const { height, width } = Dimensions.get('window');
 class Home extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -42,11 +43,6 @@ class Home extends React.Component {
         const ios = Platform.OS === 'ios';
         return (
             <View style={styles.container}>
-                {
-                    !!ios ?
-                        <StatusBar backgroundColor='#ffa06c' barStyle='light-content' /> :
-                        <MyStatusBar backgroundColor='#ffa06c' barStyle='light-content' />
-                }
                 {height < 1024 ?
                     <Toolbar
                         noShadow
@@ -61,13 +57,13 @@ class Home extends React.Component {
                 }
                 <View style={styles.container}>
                     <View style={[height >= 1024 ? styles.wrapBoxIpad : styles.wrapBox]}>
-                        <TouchableOpacity style={[styles.box, height >= 1024 && { borderRadius: 75 }, this.state.activeBtn == 3 && { backgroundColor: '#ffa06c' }]} onPress={height >= 1024 ? this.onShowRegisterIpad : this.onShowRegister} >
+                        <TouchableOpacity style={[styles.box, this.state.activeBtn == 3 && { backgroundColor: '#ffa06c' }]} onPress={height >= 1024 ? this.onShowRegisterIpad : this.onShowRegister} >
                             <Text style={[styles.text, this.state.activeBtn == 3 && { color: '#fff' }]}>Register Guest</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.box, height >= 1024 && { borderRadius: 75 }, this.state.activeBtn == 1 && { backgroundColor: '#ffa06c' }]} onPress={this.onShowQrcode}>
+                        <TouchableOpacity style={[styles.box, this.state.activeBtn == 1 && { backgroundColor: '#ffa06c' }]} onPress={this.onShowQrcode}>
                             <Text style={[styles.text, this.state.activeBtn == 1 && { color: '#fff' }]}>Scan QR Code</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.box, height >= 1024 && { borderRadius: 75 }, this.state.activeBtn == 2 && { backgroundColor: '#ffa06c' }]} onPress={this.onShowList}>
+                        <TouchableOpacity style={[styles.box, this.state.activeBtn == 2 && { backgroundColor: '#ffa06c' }]} onPress={this.onShowList}>
                             <Text style={[styles.text, this.state.activeBtn == 2 && { color: '#fff' }]}>Guest List</Text>
                         </TouchableOpacity>
                     </View>
@@ -105,12 +101,12 @@ const styles = StyleSheet.create({
         // flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        width: 150,
-        height: 150,
+        width: height >= 1024  ? (width-220)/3 : (height-220)/3,
+        height: height >= 1024  ? (width-220)/3 : (height-220)/3,
         margin: 20,
-        padding: 10,
+        padding: 20,
         borderColor: '#ffa06c',
-        borderRadius: 75,
+        borderRadius: height >= 1024  ? (width-220)/6 : (height-220)/6,
         borderWidth: 2,
         overflow : "hidden",
     },
@@ -118,5 +114,10 @@ const styles = StyleSheet.create({
     toolbar: {
         backgroundColor: '#ffa06c'
     },
-    text: { color: '#ffa06c', fontWeight: 'bold', fontSize: 15 }
+    text: { 
+        color: '#ffa06c', 
+        fontWeight: 'bold', 
+        fontSize: 15 ,
+        textAlign: 'center'
+    }
 });

@@ -4,9 +4,9 @@ import { Platform, TouchableOpacity } from 'react-native';
 import {
     StyleSheet, Text, View, Image, ScrollView, TouchableWithoutFeedback, Alert
 } from 'react-native';
-import MyStatusBar from '../pages/statusBar/MyStatusBar';
 const ios = Platform.OS === 'ios';
 const logo = require('../../assets/icon-ios.png');
+import MyStatusBar from '../pages/statusBar/MyStatusBar';
 
 class MainSidebar extends Component {
     constructor(props) {
@@ -56,10 +56,6 @@ class MainSidebar extends Component {
         return (
             <View style={styles.container}>
                 <ScrollView>
-                    <MyStatusBar
-                        barStyle="light-content"
-                        backgroundColor={background}
-                    />
                     <View style={styles.wrapLogo}>
                         <Image
                             style={styles.stretch}
@@ -86,6 +82,7 @@ const styles = StyleSheet.create({
     wrapLogo: {
         alignItems: 'center',
         padding: 10,
+        paddingTop: 20,
         backgroundColor: '#f89f6d'
     },
     logo: {

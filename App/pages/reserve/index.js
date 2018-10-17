@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
-import { StyleSheet, Dimensions, Alert, Platform, StatusBar, View, Text, FlatList, TouchableOpacity, RefreshControl, ScrollView, SectionList } from 'react-native';
+import { StyleSheet, Dimensions, Alert, Platform, View, Text, FlatList, TouchableOpacity, RefreshControl, ScrollView, SectionList } from 'react-native';
 import { Ionicons as Icon, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { Container, Header, Left, Body, Right, Button, Title, Item, Input } from 'native-base';
 import { Constants } from 'expo';
 import Toolbar from '../../controls/toolbars';
-import MyStatusBar from '../statusBar/MyStatusBar';
 import Create from './create';
 import GuestsItem from './reserveItem';
 import axios from 'axios';
 import ReserveDetail from './detailReserve';
+import MyStatusBar from '../statusBar/MyStatusBar';
 import { API_URL } from '../constants/Config';
+
 const ios = Platform.OS === 'ios';
 const { height } = Dimensions.get('window');
 const { width } = Dimensions.get('window');
 import Loading from '../../controls/loading';
+
 class AllGuests extends Component {
     constructor(props, context) {
         super(props, context);
@@ -145,10 +147,9 @@ class AllGuests extends Component {
         })
         return (
             <View style={[height >= 1024 ? styles.wraper : styles.container]}>
-                <View style={[height >= 1024 ? styles.containerIpad : styles.container]}>
-                    {ios ? <StatusBar backgroundColor='#ffa06c' barStyle='light-content' /> : <MyStatusBar backgroundColor='#ffa06c' barStyle='light-content' />}
+                <View style={[height >= 1024 ? styles.containerIpad : styles.container]}>                    
                     {height >= 1024 ?
-                        <Header style={{ backgroundColor: '#ffa06c', borderBottomWidth: 0 }}>
+                        <Header style={{ backgroundColor: '#ffa06c', borderBottomWidth: 0 }} iosBarStyle='light-content'>
                             <Left>
                                 <Button transparent onPress={this.showMenu}>
                                     <MaterialIcons name='menu' style={{ fontSize: 22, color: '#fff' }} />
@@ -174,7 +175,7 @@ class AllGuests extends Component {
                         ></Toolbar>
                     }
                     <View>
-                        <Header searchBar rounded autoCorrect={false} style={[height >= 1024 ? { backgroundColor: '#fff' } : { backgroundColor: '#fff' }]}>
+                        <Header searchBar rounded autoCorrect={false} style={[height >= 1024 ? { backgroundColor: '#fff' } : { backgroundColor: '#fff' }]} iosBarStyle='light-content'>
                             <Item style={[ios ? { padding: 5 } : { padding: 10, backgroundColor: '#dedede' }]}>
                                 <Icon name="ios-search" style={{ fontSize: 20 }} />
                                 <Input

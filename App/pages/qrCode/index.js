@@ -1,8 +1,9 @@
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View, Permissions, LayoutAnimation, StatusBar, TouchableOpacity } from 'react-native';
-import { BarCodeScanner } from 'expo';
+import { Dimensions, StyleSheet, Text, View, LayoutAnimation, StatusBar, TouchableOpacity } from 'react-native';
+import { BarCodeScanner,  Permissions} from 'expo';
 import { Ionicons as Icon } from '@expo/vector-icons';
 import BoxInfo from './../../components/infoUser';
+import { Button, Spinner } from 'native-base';
 const { SCREEN_WIDTH } = Dimensions.get('window');
 
 export default class App extends React.Component {
@@ -14,8 +15,16 @@ export default class App extends React.Component {
             loading: false,
             showInfo: false,
             showCamera: false,
-            currentInfo: null
+            currentInfo: null,
+            hasCameraPermission: null
         }
+    }
+
+    async componentWillMount() {
+       // const p1 = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        const p2 = await Permissions.askAsync(Permissions.CAMERA);
+        console.log('permission request',  p2)
+        this.setState({hasCameraPermission: p2.status === 'granted'});
     }
 
     _handleBarCodeRead = result => {
@@ -38,6 +47,26 @@ export default class App extends React.Component {
     }
 
     render() {
+         const { hasCameraPermission } = this.state;
+
+         if (hasCameraPermission === null) {
+            return (
+                <View style={styles.page}></View>
+            )
+        }
+        if (hasCameraPermission === false) {
+            return (
+                <View style={styles.page}>
+                    <Text style={{marginTop: 40, textAlign: 'center'}}>No access to camera</Text>
+                    <Button transparent dark block
+                        onPress={this.onCloseCamera}
+                        style={{ backgroundColor: '#fff', marginTop: 15 }} >
+                        <Text style={{ paddingLeft: 10, paddingRight: 10, fontWeight: 'bold' }}>Close</Text>
+                    </Button>
+                </View>
+            )
+        }
+
         return (
             <View style={styles.page}>
                 {this.state.showInfo == false &&

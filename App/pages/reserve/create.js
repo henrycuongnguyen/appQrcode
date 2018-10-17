@@ -139,7 +139,7 @@ class CreateForm extends React.Component {
         return (
             this.props.showCreateIpad ?
                 <View style = {{backgroundColor: '#f5f5f5', flex: 1 }}>
-                    <Header style={{ backgroundColor: '#ffa06c', borderBottomWidth: 0 }}>
+                    <Header style={{ backgroundColor: '#ffa06c', borderBottomWidth: 0 }} iosBarStyle='light-content'>
                         <Left />
                         <Body>
                             <Title style={{ color: '#fff', paddingTop: 5 }}>Reserve a slot</Title>
@@ -454,7 +454,8 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     toolbar: {
-        backgroundColor: '#ffa06c'
+        backgroundColor: '#ffa06c',
+        paddingTop: ios ? 20 : 0
     },
     prop: {
         flexDirection: 'row',

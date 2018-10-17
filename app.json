@@ -1,50 +1,50 @@
 {
-    "expo": {
-        "name": "O Event",
-        "description": "O Event",
-        "slug": "o-event",
-        "privacy": "public",
-        "sdkVersion": "30.0.0",
-        "platforms": [
-            "ios",
-            "android"
-        ],
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/icon.png",
-        "splash": {
-            "image": "./assets/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#f89f6d"
-        },
-        "updates": {
-            "fallbackToCacheTimeout": 0
-        },
-        "assetBundlePatterns": [
-            "**/*"
-        ],
-        "ios": {
-            "buildNumber": "1",
-            "bundleIdentifier": "com.oangle.oevent",
-            "icon": "./assets/icon-ios.png",
-            "supportsTablet": true,
-            "infoPlist": {
-                "NSCameraUsageDescription": "The application needs permission for your camera to scan QR code."
-            }
-        },
-        "android": {
-            "versionCode": 2,
-            "package": "com.oangle.oevent",
-            "icon": "./assets/icon-android.png",
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/icon-android-foreground.png",
-                "backgroundColor": "#f89f6d"
-            },
-            "permissions": [
-                "CAMERA",
-                "READ_EXTERNAL_STORAGE",
-                "WRITE_EXTERNAL_STORAGE"
-            ]
-        }
+  "expo": {
+    "name": "O Events",
+    "description": "O Events",
+    "slug": "o-event",
+    "privacy": "public",
+    "sdkVersion": "30.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#f89f6d"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "buildNumber": "1",
+      "bundleIdentifier": "com.oangle.oevent",
+      "icon": "./assets/icon-ios.png",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "The application needs permission for your camera to scan QR code."
+      }
+    },
+    "android": {
+      "versionCode": 3,
+      "package": "com.oangle.oevent",
+      "icon": "./assets/icon-android.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon-android-foreground.png",
+        "backgroundColor": "#f89f6d"
+      },
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     }
+  }
 }

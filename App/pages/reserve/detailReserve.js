@@ -11,6 +11,7 @@ const ios = Platform.OS === 'ios';
 import axios from 'axios';
 import { API_URL } from '../constants/Config';
 var qs = require("qs");
+
 class DetailForm extends React.Component {
 
     constructor(props) {
@@ -61,10 +62,7 @@ class DetailForm extends React.Component {
     onFetchPost(id, fname, lname, mail, phone) {
         Alert.alert(
             'Guest Details',
-            `${fname} ${lname}
-+ ${phone}
-${mail}
-                `,
+            `${fname} ${lname} + ${phone} ${mail}`,
             [
                 { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
                 {
@@ -120,7 +118,7 @@ ${mail}
         return (
             this.props.showDetailIpad ?
                 <View style={{ backgroundColor: '#f5f5f5', flex: 1 }}>
-                    <Header style={{ backgroundColor: '#ffa06c', borderBottomWidth: 0 }}>
+                    <Header style={{ backgroundColor: '#ffa06c', borderBottomWidth: 0 }} iosBarStyle='light-content'>
                         <Left />
                         <Body>
                             <Title style={{ color: '#fff', paddingTop: 5 }}>Reserve a slot</Title>
@@ -246,6 +244,7 @@ ${mail}
                 <Modal
                     supportedOrientations={['portrait', 'landscape']}
                     onRequestClose={this.handleClose} >
+                   
                     <Toolbar
                         elevation={2}
                         icon={<Icon name='arrow-back' style={styles.icon} />}
@@ -394,7 +393,8 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     toolbar: {
-        backgroundColor: '#ffa06c'
+        backgroundColor: '#ffa06c',
+        paddingTop: ios ? 20 : 0
     },
     prop: {
         flexDirection: 'row',
