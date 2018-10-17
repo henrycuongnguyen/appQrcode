@@ -25,12 +25,7 @@ class MainSidebar extends Component {
         if (scene.route.key.match(/^Divider/i)) {
             return false;
         }
-        if (scene.route.key == 'Logout') {
-            console.log('logout')
-        }
-        else {
-            base(scene);
-        }
+        base(scene);
         if (this.props.onMenuItemPress) {
             this.props.onMenuItemPress(scene.route.key);
         }

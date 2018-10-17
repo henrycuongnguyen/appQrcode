@@ -6,6 +6,7 @@ import ReservePage from '../pages/reserve/index';
 import QrCode from '../index';
 import MainSidebar from './homeSidebar';
 import Home from '../pages/home/index';
+import Logout from './../pages/home/logout';
 
 const AccountRouter = createDrawerNavigator(
     {
@@ -36,6 +37,19 @@ const AccountRouter = createDrawerNavigator(
                 drawerLabel: 'QrCode',
                 drawerIcon: props => (
                     <Icon style={[styles.icon, { color: props.tintColor }]} name='qrcode' color={props.tintColor} size={18} />
+                ),
+            }
+        },
+        Divider_1: {
+            screen: View
+        },
+        Logout: {
+            screen: Logout,
+            path: 'logout',
+            navigationOptions: {
+                drawerLabel: 'Logout',
+                drawerIcon: props => (
+                    <Icon style={[styles.icon, { color: props.tintColor }]} name='sign-out' color={props.tintColor} size={18} />
                 ),
             }
         }

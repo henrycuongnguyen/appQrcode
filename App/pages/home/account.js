@@ -7,7 +7,7 @@ const logo = require('../../../assets/icon.png');
 import KeyboardSpacer from '../../controls/keyboard-space';
 import axios from 'axios';
 import { API_URL } from '../constants/Config';
-
+const pa = "oa@dev#lovewhatyoudo!";
 class Login extends React.Component {
 
     constructor(props) {
@@ -21,6 +21,7 @@ class Login extends React.Component {
             isModalVisible: false,
             keyboardVisibled: false
         }
+        // AsyncStorage.removeItem('access_token');
     }
 
 
@@ -32,9 +33,13 @@ class Login extends React.Component {
             axios.get(url).then(response => {
                 this.setState({ loading: false })
                 let idUser = response.data[0];
-                if (this.state.username == idUser.name && this.state.password == "oa@dev#lovewhatyoudo!") {
+                if (this.state.username == idUser.name && this.state.password == pa) {
                     AsyncStorage.setItem('access_token', 'loggedin');
+                    console.log('logged in')
                     this.props.login('loggedin');
+                }
+                else {
+                    this.setState({ loading: false, msg: 'Incorrect account' })
                 }
             })
                 .catch((e) => { this.setState({ loading: false, msg: 'Incorrect account' }) })
@@ -62,23 +67,24 @@ class Login extends React.Component {
                         <Item>
                             <Input
                                 placeholder="UserName"
-                                autoCapitalize='words'
+                                autoCapitalize='none'
                                 ref='title'
                                 required
                                 underlineColorAndroid='transparent'
                                 value={this.state.username}
                                 onChangeText={value => this.setState({ username: value })}
-                                style={styles.input} placeholder="UserName" />
+                                style={styles.input} placeholder="Username" />
                         </Item>
 
                         <Item>
                             <Input
                                 placeholder="Password"
-                                autoCapitalize='words'
+                                autoCapitalize='none'
                                 ref='title'
                                 required
-                                underlineColorAndroid='transparent'
+                                password
                                 secureTextEntry={true}
+                                underlineColorAndroid='transparent'
                                 value={this.state.password}
                                 onChangeText={value => this.setState({ password: value })}
                                 style={styles.input} placeholder="Password" />

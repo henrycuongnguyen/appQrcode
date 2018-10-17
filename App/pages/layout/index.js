@@ -31,12 +31,20 @@ class Layout extends Component {
         }
     }
 
+    logout = () => {
+        console.log('logout')
+        AsyncStorage.removeItem('access_token');
+        this.setState({
+            loggedIn: false
+        })
+    }
+
     render() {
         return (
             this.state.loggedIn == true ?
-                <MainPage />
+                <MainPage logout={this.logout} screenProps={{ logout: this.logout }} />
                 :
-                <LoginPage login={(data) => this.login(data)} />
+                <LoginPage login={this.login} />
         )
     }
 }
