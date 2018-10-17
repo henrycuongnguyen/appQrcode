@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Alert } from 'react-native';
 
 export default class Logout extends React.Component {
