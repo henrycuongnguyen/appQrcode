@@ -37,9 +37,9 @@ class Login extends React.Component {
                 url,
             }).then(({ data }) => {
                 this.setState({ loading: false })
-                console.log('====================================')
-                console.log(data)
-                console.log('====================================')
+                // console.log('====================================')
+                // console.log(data)
+                // console.log('====================================')
                 if (data.success) {
                     AsyncStorage.setItem('access_token', 'loggedin');
                     console.log('logged in')
