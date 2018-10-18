@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, AsyncStorage, View, Alert, Platform, StatusBar} from 'react-native';
+import { Text, AsyncStorage, View, Alert, Platform, StatusBar } from 'react-native';
 import { Updates } from 'expo';
 import LoginPage from '../home/account';
 import MainPage from '../../route/homeIndex';
@@ -30,12 +30,12 @@ class Layout extends Component {
     }
 
     _handleUpdate = ({ type }) => {
-        if (type === Updates.EventType.DOWNLOAD_FINISHED) {
+        if (type === Updates.EventType.DOWNLOAD_FINISHED && !ios) {
             Alert.alert(
                 'Update',
                 'The application has been updated, do you want to reload it?',
                 [
-                    { text: 'No', style: 'cancel' },                    
+                    { text: 'No', style: 'cancel' },
                     {
                         text: 'Yes', onPress: async () => {
                             Updates.reloadFromCache();
@@ -62,11 +62,11 @@ class Layout extends Component {
     }
 
     render() {
-        if(this.state.loggedIn === null) return null;
+        if (this.state.loggedIn === null) return null;
 
         return (
             this.state.loggedIn == true ?
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                     <MyStatusBar
                         barStyle="light-content"
                         backgroundColor='#f3a76b'
