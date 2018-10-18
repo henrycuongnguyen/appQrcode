@@ -107,9 +107,9 @@ class AllGuests extends Component {
     };
 
     refresh = () => {
-        var urlItem = `${API_URL}/wp-json/sections_endpoint/v2/reserves`;
+        var urlItem = `${API_URL}/wp-json/qrcode/guests`;
         this.setState({ refreshing: true });
-        axios.get(`${urlItem}`).then(response => {
+        axios.get(urlItem).then(response => {
             this.setState({
                 refreshing: false,
                 data: response.data
@@ -147,7 +147,7 @@ class AllGuests extends Component {
         })
         return (
             <View style={[height >= 1024 ? styles.wraper : styles.container]}>
-                <View style={[height >= 1024 ? styles.containerIpad : styles.container]}>                    
+                <View style={[height >= 1024 ? styles.containerIpad : styles.container]}>
                     {height >= 1024 ?
                         <Header style={{ backgroundColor: '#ffa06c', borderBottomWidth: 0 }} iosBarStyle='light-content'>
                             <Left>

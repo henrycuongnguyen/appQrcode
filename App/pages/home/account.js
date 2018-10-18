@@ -29,11 +29,18 @@ class Login extends React.Component {
         const { username, password } = this.state;
         if (username && password) {
             this.setState({ loading: true })
-            var url = `${API_URL}/wp-json/wp/v2/users`;
-            axios.get(url).then(response => {
+            var url = `${API_URL}/wp-json/qrcode/login`;
+            axios({
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                data: { a: username, b: password },
+                url,
+            }).then(({ data }) => {
                 this.setState({ loading: false })
-                let idUser = response.data[0];
-                if (this.state.username == idUser.name && this.state.password == pa) {
+                console.log('====================================')
+                console.log(data)
+                console.log('====================================')
+                if (data.success) {
                     AsyncStorage.setItem('access_token', 'loggedin');
                     console.log('logged in')
                     this.props.login('loggedin');
@@ -43,7 +50,7 @@ class Login extends React.Component {
                     this.setState({ loading: false, msg: 'Incorrect account' })
                 }
             })
-                .catch((e) => { 
+                .catch((e) => {
                     this.setState({ loading: false, msg: 'Incorrect account' });
                     console.log('sai pass', this.state.password, e)
                 })

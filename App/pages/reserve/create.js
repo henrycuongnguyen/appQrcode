@@ -64,22 +64,16 @@ class CreateForm extends React.Component {
 
     handleSubmit = () => {
         var myurl = `${API_URL}/reserve/`;
-        var vfName = this.state.model.first_name;
-        var vlName = this.state.model.last_name;
-        var vemail = this.state.model.email;
-        var vPhone = this.state.model.mobile_number;
-        var vCode = this.state.model.country_code;
-        var vTitle = this.state.model.title;
-        var vDate = this.state.model.date;
-        var vTime = this.state.model.time;
-        if (vfName == '' || vlName == '' || vemail == '' || vPhone == '' || vCode == '' || vTitle == '' || vDate == '' || vTime == '') {
+
+        if (Object.values(this.state.model).find(v => v == '')) {
             alert('Please enter full fields');
-        } else {
+        }
+        else {
             return axios({
                 method: 'POST',
                 url: myurl,
                 data: qs.stringify(this.state.model),
-            }).then(response => {                
+            }).then(response => {
                 Alert.alert(
                     `Thank you for your interest ${this.state.model.last_name}.`,
                     `Your reservation has been submitted. We have sent a confirmation email to ${this.state.model.email}. We look forward to seeing you on ${this.state.model.date} at ${this.state.model.time}. Get ready to be dazzled!`,
@@ -138,7 +132,7 @@ class CreateForm extends React.Component {
 
         return (
             this.props.showCreateIpad ?
-                <View style = {{backgroundColor: '#f5f5f5', flex: 1 }}>
+                <View style={{ backgroundColor: '#f5f5f5', flex: 1 }}>
                     <Header style={{ backgroundColor: '#ffa06c', borderBottomWidth: 0 }} iosBarStyle='light-content'>
                         <Left />
                         <Body>
@@ -149,7 +143,7 @@ class CreateForm extends React.Component {
 
                     <View style={{ padding: 15, backgroundColor: '#f5f5f5' }}>
                         <View style={styles.reserveInfoIpad}>
-                            <Text style={{ marginBottom: 15}}>Complete the form below to reserve a slot for Cartier Collecrtion Exihibition.</Text>
+                            <Text style={{ marginBottom: 15 }}>Complete the form below to reserve a slot for Cartier Collecrtion Exihibition.</Text>
                             <Form style={{ backgroundColor: '#fff' }}>
                                 <Item>
                                     <Picker
