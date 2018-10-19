@@ -30,7 +30,7 @@ class Layout extends Component {
     }
 
     _handleUpdate = ({ type }) => {
-        if (type === Updates.EventType.DOWNLOAD_FINISHED && !ios) {
+        if (type === Updates.EventType.DOWNLOAD_FINISHED) {
             Alert.alert(
                 'Update',
                 'The application has been updated, do you want to reload it?',

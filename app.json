@@ -2,14 +2,14 @@
     "expo": {
         "name": "O Events",
         "description": "O Events",
-        "slug": "o-event",
+        "slug": "o-events",
         "privacy": "public",
         "sdkVersion": "30.0.0",
         "platforms": [
             "ios",
             "android"
         ],
-        "version": "1.0.0",
+        "version": "1.0.1",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "splash": {
@@ -18,14 +18,14 @@
             "backgroundColor": "#f89f6d"
         },
         "updates": {
-            "fallbackToCacheTimeout": 0
+            "fallbackToCacheTimeout": 6
         },
         "assetBundlePatterns": [
             "**/*"
         ],
         "ios": {
-            "buildNumber": "2",
-            "bundleIdentifier": "com.oangle.oevent",
+            "buildNumber": "1",
+            "bundleIdentifier": "com.oangle.oevents",
             "icon": "./assets/icon-ios.png",
             "supportsTablet": true,
             "infoPlist": {
@@ -33,8 +33,8 @@
             }
         },
         "android": {
-            "versionCode": 4,
-            "package": "com.oangle.oevent",
+            "versionCode": 1,
+            "package": "com.oangle.oevents",
             "icon": "./assets/icon-android.png",
             "adaptiveIcon": {
                 "foregroundImage": "./assets/icon-android-foreground.png",
