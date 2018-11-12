@@ -5,7 +5,7 @@ import {
     StyleSheet, Text, View, Image, ScrollView, TouchableWithoutFeedback, Alert
 } from 'react-native';
 const ios = Platform.OS === 'ios';
-const logo = require('../../assets/icon-ios.png');
+const logo = require('../../assets/icon.png');
 import MyStatusBar from '../pages/statusBar/MyStatusBar';
 
 class MainSidebar extends Component {
@@ -81,8 +81,7 @@ const styles = StyleSheet.create({
     },
     wrapLogo: {
         alignItems: 'center',
-        padding: 10,
-        paddingTop: 20,
+        padding: 20,
         backgroundColor: '#f89f6d'
     },
     logo: {

@@ -1,7 +1,7 @@
 {
     "expo": {
-        "name": "O Events",
-        "description": "O Events",
+        "name": "CAR-SG Check In",
+        "description": "CAR-SG Check In",
         "slug": "o-events",
         "privacy": "public",
         "sdkVersion": "30.0.0",
@@ -9,13 +9,13 @@
             "ios",
             "android"
         ],
-        "version": "1.0.1",
+        "version": "1.0.2",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "splash": {
             "image": "./assets/splash.png",
             "resizeMode": "contain",
-            "backgroundColor": "#f89f6d"
+            "backgroundColor": "#901e21"
         },
         "updates": {
             "fallbackToCacheTimeout": 6
@@ -33,12 +33,12 @@
             }
         },
         "android": {
-            "versionCode": 1,
+            "versionCode": 2,
             "package": "com.oangle.oevents",
-            "icon": "./assets/icon-android.png",
+            "icon": "./assets/icon.png",
             "adaptiveIcon": {
                 "foregroundImage": "./assets/icon-android-foreground.png",
-                "backgroundColor": "#f89f6d"
+                "backgroundColor": "#901e21"
             },
             "permissions": [
                 "CAMERA",
