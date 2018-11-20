@@ -19,7 +19,9 @@ class Layout extends Component {
     componentDidMount() {
 
         AsyncStorage.getItem("access_token").then((value) => {
-            this.setState({ "access_token": value, loggedIn: true });
+            if (value) {
+                this.setState({ loggedIn: true });
+            }
         })
             .then(res => {
                 //do something else
@@ -52,13 +54,12 @@ class Layout extends Component {
 
     login = (data) => {
         AsyncStorage.getItem("access_token").then((value) => {
-            var dt = data;
-            if (value = dt) {
-                this.setState({ loggedIn: true })
-            }
+            this.setState({ access_token: value })
         })
             .then(res => {
-                //do something else
+                if (data = this.state.access_token) {
+                    this.setState({ loggedIn: true })
+                }
             });
     }
 

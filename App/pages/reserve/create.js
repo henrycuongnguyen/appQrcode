@@ -65,7 +65,12 @@ class CreateForm extends React.Component {
     handleSubmit = () => {
         var myurl = `${API_URL}/reserve/`;
 
-        if (Object.values(this.state.model).find(v => v == '')) {
+        // if (Object.values(this.state.model).find(v => v == '')) {
+        //     alert('Please enter full fields');
+        // }
+        if (this.state.model.date == '' || this.state.model.time == '' ||
+            this.state.model.title == '' || this.state.model.first_name == '' ||
+            this.state.model.last_name == '' || this.state.model.email == '' || this.state.model.country_code == '' || this.state.model.mobile_number == '') {
             alert('Please enter full fields');
         }
         else {
