@@ -72,7 +72,7 @@ class Layout extends Component {
     }
 
     render() {
-        console.log(this.state.loggedIn, "hhfguidhfo");
+        // console.log(this.state.loggedIn, "hhfguidhfo");
         // if (!this.state.loggedIn) return null;
 
         return (
