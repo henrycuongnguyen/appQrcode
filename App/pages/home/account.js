@@ -24,6 +24,36 @@ class Login extends React.Component {
         // AsyncStorage.removeItem('access_token');
     }
 
+    validate = () => {
+        const { username, password } = this.state;
+        if (username && password) {
+            this.setState({ loading: true })
+            var url = `${API_URL}/wp-json/jwt-auth/v1/token`;
+            axios({
+                method: 'POST',
+                // headers: { 'content-type': 'application/json' },
+                data: { username: username, password: password },
+                url,
+            }).then(({ data }) => {
+                this.setState({ loading: false })
+                if (data.token) {
+                    // console.log('====================================')
+                    // console.log(data.token)
+                    // console.log('====================================')
+                    AsyncStorage.setItem('access_token', data.token);
+                    this.props.login('loggedin');
+                }
+
+            })
+                .catch((e) => {
+                    this.setState({ loading: false, msg: 'Incorrect account' });
+                    console.log('error pass', this.state.password, e)
+                })
+        } else {
+            this.setState({ msg: 'Please enter full fields' });
+        }
+    }
+
 
     login = () => {
         const { username, password } = this.state;
@@ -37,10 +67,10 @@ class Login extends React.Component {
                 url,
             }).then(({ data }) => {
                 this.setState({ loading: false })
-                // console.log('====================================')
-                // console.log(data)
-                // console.log('====================================')
-                if (data.success) {
+                console.log('====================================')
+                console.log(data)
+                console.log('====================================')
+                if (data.success && data.token) {
                     AsyncStorage.setItem('access_token', 'loggedin');
                     console.log('logged in')
                     this.props.login('loggedin');
@@ -52,7 +82,7 @@ class Login extends React.Component {
             })
                 .catch((e) => {
                     this.setState({ loading: false, msg: 'Incorrect account' });
-                    console.log('sai pass', this.state.password, e)
+                    console.log('error pass', this.state.password, e)
                 })
         } else {
             this.setState({ msg: 'Please enter full fields' });
@@ -108,7 +138,7 @@ class Login extends React.Component {
                             <Text style={{ color: 'red', paddingLeft: 20, paddingTop: 20 }}>{this.state.msg}</Text>
                         </View>}
                     <View style={{ marginTop: 30, marginLeft: 0, alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }}>
-                        <Button transparent dark onPress={() => this.login()} style={{ backgroundColor: '#fff', padding: 10 }} >
+                        <Button transparent dark onPress={() => this.validate()} style={{ backgroundColor: '#fff', padding: 10 }} >
                             {this.state.loading && <Spinner color='green' />}
                             <Text style={{ paddingLeft: 15, paddingRight: 15, fontWeight: 'bold' }}>Login</Text>
                         </Button>

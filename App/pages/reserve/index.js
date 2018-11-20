@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Dimensions, Alert, Platform, View, Text, FlatList, TouchableOpacity, RefreshControl, ScrollView, SectionList } from 'react-native';
+import { StyleSheet, Dimensions, Alert, Platform, View, Text, FlatList, TouchableOpacity, RefreshControl, ScrollView, SectionList, AsyncStorage } from 'react-native';
 import { Ionicons as Icon, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { Container, Header, Left, Body, Right, Button, Title, Item, Input } from 'native-base';
 import { Constants } from 'expo';
@@ -29,6 +29,7 @@ class AllGuests extends Component {
             showDetailRes: false,
             error: null,
             isVisible: 'showModalCreate',
+            access_token: null,
         }
         this.arrayholder = [];
     }
@@ -36,18 +37,35 @@ class AllGuests extends Component {
     componentDidMount() {
         var urlItem = `${API_URL}/wp-json/sections_endpoint/v2/reserves`;
         this.setState({ loading: true });
-        return axios.get(`${urlItem}`).then(response => {
-            this.setState({
-                data: response.data,
-                loading: false,
+        AsyncStorage.getItem("access_token").then((value) => {
+            this.setState({ "access_token": value });
+            var config = {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': `Bearer ${value}`,
+                }
+            };
+            axios.get(`${urlItem}`, config).then(response => {
+                // console.log('response==', response);
+                this.setState({
+                    data: response.data,
+                    loading: false,
+                })
+                this.arrayholder = response.data;
             })
-            this.arrayholder = response.data;
+                .catch(err => {
+                    this.setState({
+                        loading: false,
+                    })
+                });
         })
-            .catch(err => {
+            .then(res => {
+
+            }).catch((e) => {
                 this.setState({
                     loading: false,
                 })
-            });
+            })
     }
 
     getActionMenu = () => {
@@ -107,23 +125,41 @@ class AllGuests extends Component {
     };
 
     refresh = () => {
-        var urlItem = `${API_URL}/wp-json/qrcode/guests`;
-        this.setState({ refreshing: true });
-        axios.get(urlItem).then(response => {
-            this.setState({
-                refreshing: false,
-                data: response.data
+        var urlItem = `${API_URL}/wp-json/sections_endpoint/v2/reserves`;
+        AsyncStorage.getItem("access_token").then((value) => {
+            this.setState({ "access_token": value });
+            var config = {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': `Bearer ${value}`,
+                }
+            };
+            axios.get(`${urlItem}`, config).then(response => {
+                // console.log('response==', response);
+                this.setState({
+                    data: response.data,
+                    loading: false,
+                })
+                this.arrayholder = response.data;
             })
-            this.arrayholder = response.data;
+                .catch(err => {
+                    this.setState({
+                        loading: false,
+                    })
+                });
         })
-            .catch(this.setState({
-                refreshing: false
-            }));
+            .then(res => {
+
+            }).catch((e) => {
+                this.setState({
+                    loading: false,
+                })
+            })
     }
 
     render() {
         // console.log('====================================')
-        // console.log(this.state.data, '-')
+        // console.log(this.state.data, '----')
         // console.log('====================================')
         const dataSection = {};
         this.state.data.map(item => {

@@ -11,16 +11,19 @@ class Layout extends Component {
         super(props);
         this.state = {
             networkError: null,
-            loggedIn: null
+            loggedIn: false,
+            access_token: ''
         }
     }
 
     componentDidMount() {
-        AsyncStorage.getItem('access_token', (err, result) => {
-            this.setState({
-                loggedIn: result == 'loggedin'
-            })
-        });
+
+        AsyncStorage.getItem("access_token").then((value) => {
+            this.setState({ "access_token": value, loggedIn: true });
+        })
+            .then(res => {
+                //do something else
+            });
 
         this.updateListener = Updates.addListener(this._handleUpdate)
     }
@@ -48,9 +51,15 @@ class Layout extends Component {
     }
 
     login = (data) => {
-        this.setState({
-            loggedIn: data == 'loggedin'
+        AsyncStorage.getItem("access_token").then((value) => {
+            var dt = data;
+            if (value = dt) {
+                this.setState({ loggedIn: true })
+            }
         })
+            .then(res => {
+                //do something else
+            });
     }
 
     logout = () => {
@@ -62,7 +71,8 @@ class Layout extends Component {
     }
 
     render() {
-        if (this.state.loggedIn === null) return null;
+        console.log(this.state.loggedIn, "hhfguidhfo");
+        // if (!this.state.loggedIn) return null;
 
         return (
             this.state.loggedIn == true ?
