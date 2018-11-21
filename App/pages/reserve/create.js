@@ -1,17 +1,20 @@
 ﻿import React from 'react';
+import moment from 'moment';
 import Toolbar from '../../controls/toolbars';
 import Loading from '../../controls/loading';
 import {
     Dimensions, Linking, StyleSheet, ScrollView, Alert,
-    TouchableOpacity, Image, Modal, TextInput, Switch, View, Text, Platform
+    TouchableOpacity, Image, Modal, TextInput, Switch, View, Text, Platform, AsyncStorage
 } from 'react-native';
 import { CheckBox, Form, Item, Input, ListItem, Body, Header, Left, Right, Title, Button, Picker } from 'native-base';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 const ios = Platform.OS === 'ios';
 import axios from 'axios';
 import { API_URL } from '../constants/Config';
+import DatePicker from '../../controls/datepicker';
 var qs = require("qs");
 const Items = Picker.Item;
+import Constants from './const';
 class CreateForm extends React.Component {
 
     constructor(props) {
@@ -28,16 +31,30 @@ class CreateForm extends React.Component {
                 email: '',
                 country_code: '',
                 mobile_number: '',
-                date: '1 NOV (THU)',
+                date: moment().format("YYYY-MM-DD"),
                 time: '11:00 AM',
+                bir_day: '',
+                bir_month: '',
+                bir_year: '',
             },
             selectedItem: undefined,
             results: {
                 items: []
-            }
+            },
+            d: [],
+            t: [],
+            y: [],
+        }
+        for (var i = 1; i <= 31; i++) {
+            this.state.d.push(i);
+        }
+        for (var i = 1; i <= 12; i++) {
+            this.state.t.push(i);
+        }
+        for (var i = 1940; i <= 2004; i++) {
+            this.state.y.push(i);
         }
     }
-
 
     setValue = data => {
         this.setState({
@@ -63,57 +80,82 @@ class CreateForm extends React.Component {
     }
 
     handleSubmit = () => {
-        var myurl = `${API_URL}/reserve/`;
-
+        var myurl = `${API_URL}/wp-json/register/v2/reserves`;
         // if (Object.values(this.state.model).find(v => v == '')) {
         //     alert('Please enter full fields');
         // }
+        var reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
         if (this.state.model.date == '' || this.state.model.time == '' ||
             this.state.model.title == '' || this.state.model.first_name == '' ||
             this.state.model.last_name == '' || this.state.model.email == '' || this.state.model.country_code == '' || this.state.model.mobile_number == '') {
             alert('Please enter full fields');
         }
         else {
-            return axios({
-                method: 'POST',
-                url: myurl,
-                data: qs.stringify(this.state.model),
-            }).then(response => {
-                Alert.alert(
-                    `Thank you for your interest ${this.state.model.last_name}.`,
-                    `Your reservation has been submitted. We have sent a confirmation email to ${this.state.model.email}. We look forward to seeing you on ${this.state.model.date} at ${this.state.model.time}. Get ready to be dazzled!`,
-                    [
-                        {
-                            text: 'OK', onPress: () => {
-                                this.props.refresh();
-                                this.props.onRequestClose();
-                            }
-                        },
-                    ],
-                    { cancelable: false }
-                )
-                this.setState({
-                    ...this.state,
-                    model: {
-                        title: '',
-                        first_name: '',
-                        last_name: '',
-                        email: '',
-                        country_code: '',
-                        mobile_number: '',
-                        date: '1 NOV (THU)',
-                        time: '11:00 AM',
-                    }
-                })
+            if (reg.test(this.state.model.email) === false) {
+                alert('Email error');
+            } else {
 
-            })
-                .catch(err => console.log('err', err));
+                AsyncStorage.getItem("access_token").then((value) => {
+                    this.setState({ "access_token": value });
+                    var config = {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Authorization': `Bearer ${value}`,
+                        }
+                    };
+                    return axios({
+                        method: 'POST',
+                        url: myurl,
+                        config,
+                        data: this.state.model,
+                    }).then(response => {
+                        Alert.alert(
+                            `Thank you for your interest ${this.state.model.last_name}.`,
+                            `Your reservation has been submitted. We have sent a confirmation email to ${this.state.model.email}. We look forward to seeing you on ${this.state.model.date} at ${this.state.model.time}. Get ready to be dazzled!`,
+                            [
+                                {
+                                    text: 'OK', onPress: () => {
+                                        this.props.refresh();
+                                        this.props.onRequestClose();
+                                    }
+                                },
+                            ],
+                            { cancelable: false }
+                        )
+                        this.setState({
+                            ...this.state,
+                            model: {
+                                title: '',
+                                first_name: '',
+                                last_name: '',
+                                email: '',
+                                country_code: '',
+                                mobile_number: '',
+                                date: moment().format("YYYY-MM-DD"),
+                                time: '11:00 AM',
+                            }
+                        })
+
+                    })
+                        .catch(err => console.log('err', err));
+                })
+                    .then(res => {
+
+                    }).catch((e) => {
+                        this.setState({
+                            loading: false,
+                        })
+                    })
+            }
         }
     }
 
     onValueChange = (value) => {
         this.setState({
             model: {
+                ...this.state.model,
                 date: value,
             }
         });
@@ -122,9 +164,61 @@ class CreateForm extends React.Component {
     onValueChangeTime = (value) => {
         this.setState({
             model: {
+                ...this.state.model,
                 time: value,
             }
         });
+    }
+    onValueChangeTitle = (value) => {
+        if (value !== 0) {
+            this.setState({
+                model: {
+                    ...this.state.model,
+                    title: value,
+                }
+            });
+        }
+    }
+    onValueChangebir_day = (value) => {
+        if (value !== 0) {
+            this.setState({
+                model: {
+                    ...this.state.model,
+                    bir_day: value,
+                }
+            });
+        }
+    }
+    onValueChangebir_month = (value) => {
+        if (value !== 0) {
+            this.setState({
+                model: {
+                    ...this.state.model,
+                    bir_month: value,
+                }
+            });
+        }
+    }
+    onValueChangebir_year = (value) => {
+        if (value !== 0) {
+            this.setState({
+                model: {
+                    ...this.state.model,
+                    bir_year: value,
+                }
+            });
+        }
+    }
+
+    onValueChangecountry_code = (value) => {
+        if (value !== 0) {
+            this.setState({
+                model: {
+                    ...this.state.model,
+                    country_code: value,
+                }
+            });
+        }
     }
 
 
@@ -134,7 +228,8 @@ class CreateForm extends React.Component {
         if (!this.props.show) {
             return null;
         }
-
+        // console.log(Constants, '--')
+        // console.log(this.state.model, '-----');
         return (
             this.props.showCreateIpad ?
                 <View style={{ backgroundColor: '#f5f5f5', flex: 1 }}>
@@ -151,27 +246,12 @@ class CreateForm extends React.Component {
                             <Text style={{ marginBottom: 15 }}>Complete the form below to reserve a slot for Cartier Collecrtion Exihibition.</Text>
                             <Form style={{ backgroundColor: '#fff' }}>
                                 <Item>
-                                    <Picker
-                                        mode='dropdown'
-                                        selectedValue={this.state.model.date}
-                                        onValueChange={this.onValueChange}>
-                                        <Items label='1 NOV (THU)' value='1 NOV (THU)' />
-                                        <Items label='2 NOV (FRI)' value='2 NOV (FRI)' />
-                                        <Items label='3 NOV (SAT)' value='3 NOV (SAT)' />
-                                        <Items label='4 NOV (SUN)' value='4 NOV (SUN)' />
-                                        <Items label='5 NOV (MON)' value='5 NOV (MON)' />
-                                        <Items label='6 NOV (TUE)' value='6 NOV (TUE)' />
-                                        <Items label='7 NOV (WED)' value='7 NOV (WED)' />
-                                        <Items label='8 NOV (THU)' value='8 NOV (THU)' />
-                                        <Items label='9 NOV (FRI)' value='9 NOV (FRI)' />
-                                        <Items label='10 NOV (SAT)' value='10 NOV (SAT)' />
-                                        <Items label='11 NOV (SUN)' value='11 NOV (SUN)' />
-                                        <Items label='12 NOV (MON)' value='12 NOV (MON)' />
-                                        <Items label='13 NOV (TUE)' value='13 NOV (TUE)' />
-                                        <Items label='14 NOV (WED)' value='14 NOV (WED)' />
-                                        <Items label='15 NOV (THU)' value='15 NOV (THU)' />
-                                        <Items label='16 NOV (FRI)' value='16 NOV (FRI)' />
-                                    </Picker>
+                                    <DatePicker
+                                        style={styles.datepicker}
+                                        date={this.state.model.date}
+                                        onDateChange={(date) => { this.setValue({ date: date }) }}
+                                    />
+
                                 </Item>
                                 <Item>
                                     <Picker
@@ -187,18 +267,25 @@ class CreateForm extends React.Component {
                                         <Items label='5:00 AM' value='5:00 AM' />
                                         <Items label='6:00 AM' value='6:00 AM' />
                                         <Items label='7:00 AM' value='7:00 AM' />
+                                        <Items label='1:00 PM' value='1:00 PM' />
+                                        <Items label='2:00 PM' value='2:00 PM' />
+                                        <Items label='3:00 PM' value='3:00 PM' />
+                                        <Items label='4:00 PM' value='4:00 PM' />
+                                        <Items label='5:00 PM' value='5:00 PM' />
+                                        <Items label='6:00 PM' value='6:00 PM' />
+                                        <Items label='7:00 PM' value='7:00 PM' />
                                     </Picker>
                                 </Item>
                                 <Item>
-                                    <Input
-                                        placeholder="Title"
-                                        autoCapitalize='words'
-                                        ref='title'
-                                        required
-                                        underlineColorAndroid='transparent'
-                                        value={this.state.model.title}
-                                        onChangeText={text => this.setValue({ title: text })}
-                                    />
+                                    <Picker
+                                        mode='dropdown'
+                                        selectedValue={this.state.model.title}
+                                        onValueChange={this.onValueChangeTitle}>
+                                        <Items label='Title' value='0' />
+                                        <Items label='Mr' value='Mr' />
+                                        <Items label='Ms' value='Ms' />
+                                        <Items label='Mdm' value='Mdm' />
+                                    </Picker>
                                 </Item>
                                 <Item>
                                     <Input
@@ -223,6 +310,32 @@ class CreateForm extends React.Component {
                                     />
                                 </Item>
                                 <Item>
+                                    <Picker
+                                        style={{ paddingRight: 15 }}
+                                        mode='dropdown'
+                                        selectedValue={this.state.model.bir_day}
+                                        onValueChange={this.onValueChangebir_day}>
+                                        <Items label='DD' value='0' />
+                                        {this.state.d.map((i) => (<Item key={i} label={i.toString()} value={i} />))}
+                                    </Picker>
+                                    <Picker
+                                        style={{ paddingRight: 15 }}
+                                        mode='dropdown'
+                                        selectedValue={this.state.model.bir_month}
+                                        onValueChange={this.onValueChangebir_month}>
+                                        <Items label='MM' value='0' />
+                                        {this.state.t.map((i) => (<Item key={i} label={i.toString()} value={i} />))}
+                                    </Picker>
+                                    <Picker
+                                        style={{ paddingRight: 15 }}
+                                        mode='dropdown'
+                                        selectedValue={this.state.model.bir_year}
+                                        onValueChange={this.onValueChangebir_year}>
+                                        <Items label='YYYY' value='0' />
+                                        {this.state.y.map((i) => (<Item key={i} label={i.toString()} value={i} />))}
+                                    </Picker>
+                                </Item>
+                                <Item>
                                     <Input
                                         keyboardType='email-address'
                                         placeholder="Email"
@@ -235,21 +348,18 @@ class CreateForm extends React.Component {
                                     />
                                 </Item>
                                 <Item>
-                                    <Input
-                                        keyboardType='phone-pad'
-                                        placeholder="Country Code"
-                                        autoCapitalize='words'
-                                        ref='mail'
-                                        required
-                                        underlineColorAndroid='transparent'
-                                        value={this.state.model.country_code}
-                                        onChangeText={text => this.setValue({ country_code: text })}
-                                    />
+                                    <Picker
+                                        mode='dropdown'
+                                        selectedValue={this.state.model.country_code}
+                                        onValueChange={this.onValueChangecountry_code}>
+                                        <Items label='Country Code' value='0' />
+                                        {Constants.map((i) => (<Item key={i.code} label={i.name + i.d_code} value={i.code} />))}
+                                    </Picker>
                                 </Item>
                                 <Item>
                                     <Input
                                         keyboardType='phone-pad'
-                                        placeholder="Phone Number"
+                                        placeholder="Mobile Number"
                                         required
                                         underlineColorAndroid='transparent'
                                         value={this.state.model.mobile_number}
@@ -298,27 +408,12 @@ class CreateForm extends React.Component {
                                 <Text style={{ marginBottom: 15 }}>Complete the form below to reserve a slot for Cartier Collecrtion Exihibition.</Text>
                                 <Form style={{ backgroundColor: '#fff' }}>
                                     <Item>
-                                        <Picker
-                                            mode='dropdown'
-                                            selectedValue={this.state.model.date}
-                                            onValueChange={this.onValueChange}>
-                                            <Items label='1 NOV (THU)' value='1 NOV (THU)' />
-                                            <Items label='2 NOV (FRI)' value='2 NOV (FRI)' />
-                                            <Items label='3 NOV (SAT)' value='3 NOV (SAT)' />
-                                            <Items label='4 NOV (SUN)' value='4 NOV (SUN)' />
-                                            <Items label='5 NOV (MON)' value='5 NOV (MON)' />
-                                            <Items label='6 NOV (TUE)' value='6 NOV (TUE)' />
-                                            <Items label='7 NOV (WED)' value='7 NOV (WED)' />
-                                            <Items label='8 NOV (THU)' value='8 NOV (THU)' />
-                                            <Items label='9 NOV (FRI)' value='9 NOV (FRI)' />
-                                            <Items label='10 NOV (SAT)' value='10 NOV (SAT)' />
-                                            <Items label='11 NOV (SUN)' value='11 NOV (SUN)' />
-                                            <Items label='12 NOV (MON)' value='12 NOV (MON)' />
-                                            <Items label='13 NOV (TUE)' value='13 NOV (TUE)' />
-                                            <Items label='14 NOV (WED)' value='14 NOV (WED)' />
-                                            <Items label='15 NOV (THU)' value='15 NOV (THU)' />
-                                            <Items label='16 NOV (FRI)' value='16 NOV (FRI)' />
-                                        </Picker>
+                                        <DatePicker
+                                            style={styles.datepicker}
+                                            date={this.state.model.date}
+                                            onDateChange={(date) => { this.setValue({ date: date }) }}
+                                        />
+
                                     </Item>
                                     <Item>
                                         <Picker
@@ -334,18 +429,25 @@ class CreateForm extends React.Component {
                                             <Items label='5:00 AM' value='5:00 AM' />
                                             <Items label='6:00 AM' value='6:00 AM' />
                                             <Items label='7:00 AM' value='7:00 AM' />
+                                            <Items label='1:00 PM' value='1:00 PM' />
+                                            <Items label='2:00 PM' value='2:00 PM' />
+                                            <Items label='3:00 PM' value='3:00 PM' />
+                                            <Items label='4:00 PM' value='4:00 PM' />
+                                            <Items label='5:00 PM' value='5:00 PM' />
+                                            <Items label='6:00 PM' value='6:00 PM' />
+                                            <Items label='7:00 PM' value='7:00 PM' />
                                         </Picker>
                                     </Item>
                                     <Item>
-                                        <Input
-                                            placeholder="Title"
-                                            autoCapitalize='words'
-                                            ref='title'
-                                            required
-                                            underlineColorAndroid='transparent'
-                                            value={this.state.model.title}
-                                            onChangeText={text => this.setValue({ title: text })}
-                                        />
+                                        <Picker
+                                            mode='dropdown'
+                                            selectedValue={this.state.model.title}
+                                            onValueChange={this.onValueChangeTitle}>
+                                            <Items label='Title' value='0' />
+                                            <Items label='Mr' value='Mr' />
+                                            <Items label='Ms' value='Ms' />
+                                            <Items label='Mdm' value='Mdm' />
+                                        </Picker>
                                     </Item>
                                     <Item>
                                         <Input
@@ -370,6 +472,32 @@ class CreateForm extends React.Component {
                                         />
                                     </Item>
                                     <Item>
+                                        <Picker
+                                            style={{ paddingRight: 15 }}
+                                            mode='dropdown'
+                                            selectedValue={this.state.model.bir_day}
+                                            onValueChange={this.onValueChangebir_day}>
+                                            <Items label='DD' value='0' />
+                                            {this.state.d.map((i) => (<Item key={i} label={i.toString()} value={i} />))}
+                                        </Picker>
+                                        <Picker
+                                            style={{ paddingRight: 15 }}
+                                            mode='dropdown'
+                                            selectedValue={this.state.model.bir_month}
+                                            onValueChange={this.onValueChangebir_month}>
+                                            <Items label='MM' value='0' />
+                                            {this.state.t.map((i) => (<Item key={i} label={i.toString()} value={i} />))}
+                                        </Picker>
+                                        <Picker
+                                            style={{ paddingRight: 15 }}
+                                            mode='dropdown'
+                                            selectedValue={this.state.model.bir_year}
+                                            onValueChange={this.onValueChangebir_year}>
+                                            <Items label='YYYY' value='0' />
+                                            {this.state.y.map((i) => (<Item key={i} label={i.toString()} value={i} />))}
+                                        </Picker>
+                                    </Item>
+                                    <Item>
                                         <Input
                                             keyboardType='email-address'
                                             placeholder="Email"
@@ -382,21 +510,18 @@ class CreateForm extends React.Component {
                                         />
                                     </Item>
                                     <Item>
-                                        <Input
-                                            keyboardType='phone-pad'
-                                            placeholder="Country Code"
-                                            autoCapitalize='words'
-                                            ref='mail'
-                                            required
-                                            underlineColorAndroid='transparent'
-                                            value={this.state.model.country_code}
-                                            onChangeText={text => this.setValue({ country_code: text })}
-                                        />
+                                        <Picker
+                                            mode='dropdown'
+                                            selectedValue={this.state.model.country_code}
+                                            onValueChange={this.onValueChangecountry_code}>
+                                            <Items label='Country Code' value='0' />
+                                            {Constants.map((i) => (<Item key={i.code} label={i.name + i.d_code} value={i.code} />))}
+                                        </Picker>
                                     </Item>
                                     <Item>
                                         <Input
                                             keyboardType='phone-pad'
-                                            placeholder="Phone Number"
+                                            placeholder="Mobile Number"
                                             required
                                             underlineColorAndroid='transparent'
                                             value={this.state.model.mobile_number}
@@ -479,6 +604,9 @@ const styles = StyleSheet.create({
         padding: 4,
         backgroundColor: '#f9f9f9',
         width: width - 80
+    },
+    datepicker: {
+        flex: 1,
     },
     TextInputIos: { borderWidth: 1, borderColor: '#ccc' },
     labelsl: {

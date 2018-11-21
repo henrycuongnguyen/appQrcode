@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions, StyleSheet, Text, View, LayoutAnimation, StatusBar, TouchableOpacity } from 'react-native';
-import { BarCodeScanner,  Permissions} from 'expo';
+import { BarCodeScanner, Permissions, Camera } from 'expo';
 import { Ionicons as Icon } from '@expo/vector-icons';
 import BoxInfo from './../../components/infoUser';
 import { Button, Spinner } from 'native-base';
@@ -21,10 +21,10 @@ export default class App extends React.Component {
     }
 
     async componentWillMount() {
-       // const p1 = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        // const p1 = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         const p2 = await Permissions.askAsync(Permissions.CAMERA);
-        console.log('permission request',  p2)
-        this.setState({hasCameraPermission: p2.status === 'granted'});
+        console.log('permission request', p2)
+        this.setState({ hasCameraPermission: p2.status === 'granted' });
     }
 
     _handleBarCodeRead = result => {
@@ -47,9 +47,9 @@ export default class App extends React.Component {
     }
 
     render() {
-         const { hasCameraPermission } = this.state;
+        const { hasCameraPermission } = this.state;
 
-         if (hasCameraPermission === null) {
+        if (hasCameraPermission === null) {
             return (
                 <View style={styles.page}></View>
             )
@@ -57,7 +57,7 @@ export default class App extends React.Component {
         if (hasCameraPermission === false) {
             return (
                 <View style={styles.page}>
-                    <Text style={{marginTop: 40, textAlign: 'center'}}>No access to camera</Text>
+                    <Text style={{ marginTop: 40, textAlign: 'center' }}>No access to camera</Text>
                     <Button transparent dark block
                         onPress={this.onCloseCamera}
                         style={{ backgroundColor: '#fff', marginTop: 15 }} >
