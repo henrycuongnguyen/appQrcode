@@ -7,13 +7,13 @@ class SmartDatePicker extends Component {
 
     getFormat = () => {
         if (this.props.mode == 'time') {
-            return "HH:mm"
+            return "HH:mm a"
         }
         else if (this.props.mode == 'datetime') {
             return "DD/MM/YYYY HH:mm"
         }
         else {
-            return "DD/MM/YYYY";
+            return "YYYY-MM-DD";
         }
     }
 
@@ -50,6 +50,8 @@ class SmartDatePicker extends Component {
     render() {
         return (
             <DatePicker
+                minDate={this.props.minDate}
+                maxDate={this.props.maxDate}
                 style={this.props.style}
                 date={this.getDate()}
                 // date = {this.props.date}

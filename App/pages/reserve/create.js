@@ -41,6 +41,7 @@ class CreateForm extends React.Component {
             results: {
                 items: []
             },
+            data: null,
             d: [],
             t: [],
             y: [],
@@ -54,6 +55,42 @@ class CreateForm extends React.Component {
         for (var i = 1940; i <= 2004; i++) {
             this.state.y.push(i);
         }
+
+        //this.arrayholder = [];
+    }
+
+    componentDidMount() {
+        var urlItem = `${API_URL}/wp-json/sections_timeslot/reserves`;
+        this.setState({ loading: true });
+        AsyncStorage.getItem("access_token").then((value) => {
+            this.setState({ "access_token": value });
+            var config = {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': `Bearer ${value}`,
+                }
+            };
+            axios.get(`${urlItem}`, config).then(response => {
+                // console.log('response==', response);
+                this.setState({
+                    data: response.data,
+                    loading: false,
+                })
+                //this.arrayholder = response.data;
+            })
+                .catch(err => {
+                    this.setState({
+                        loading: false,
+                    })
+                });
+        })
+            .then(res => {
+
+            }).catch((e) => {
+                this.setState({
+                    loading: false,
+                })
+            })
     }
 
     setValue = data => {
@@ -97,6 +134,7 @@ class CreateForm extends React.Component {
             } else {
 
                 AsyncStorage.getItem("access_token").then((value) => {
+                    console.log(value, '=======')
                     this.setState({ "access_token": value });
                     var config = {
                         headers: {
@@ -108,7 +146,7 @@ class CreateForm extends React.Component {
                     return axios({
                         method: 'POST',
                         url: myurl,
-                        config,
+                        ...config,
                         data: this.state.model,
                     }).then(response => {
                         Alert.alert(
@@ -161,13 +199,15 @@ class CreateForm extends React.Component {
         });
     }
 
-    onValueChangeTime = (value) => {
-        this.setState({
-            model: {
-                ...this.state.model,
-                time: value,
-            }
-        });
+    onValueChangetime = (value) => {
+        if (value !== 0) {
+            this.setState({
+                model: {
+                    ...this.state.model,
+                    time: value,
+                }
+            });
+        }
     }
     onValueChangeTitle = (value) => {
         if (value !== 0) {
@@ -223,13 +263,32 @@ class CreateForm extends React.Component {
 
 
     render() {
+        //const dataSection = {};
         const checkboxes1 = this.state.checkboxes1;
         const checkboxes2 = this.state.checkboxes2;
         if (!this.props.show) {
             return null;
         }
-        // console.log(Constants, '--')
+
+        //this.arrayholder.map((item) => {
+        //     const key = `${item.post_status.charAt(0)}`;
+        //     if (!dataSection[key]) {
+        //         dataSection[key] = [];
+        //     }
+        //     if (item.acf.date[0] == this.state.model.date.replace(/-/g, '')) {
+        //         var time = item.acf.time[0];
+        //         var formatted = moment(time, "HH:mm:ss").format("hh:mm A");
+        //         dataSection[key].push(formatted);
+        //     }
+
+        // })
+        // console.log('--==', dataSection);
         // console.log(this.state.model, '-----');
+
+        const dataSection = this.state.data ? this.state.data
+            .filter(item => item.acf.date[0] == this.state.model.date.replace(/-/g, ''))
+            .map(item => moment(item.acf.time[0], "HH:mm:ss").format("hh:mm A")) : [];
+
         return (
             this.props.showCreateIpad ?
                 <View style={{ backgroundColor: '#f5f5f5', flex: 1 }}>
@@ -250,31 +309,32 @@ class CreateForm extends React.Component {
                                         style={styles.datepicker}
                                         date={this.state.model.date}
                                         onDateChange={(date) => { this.setValue({ date: date }) }}
+                                        minDate="2018-11-24"
+                                        maxDate="2018-12-06"
+                                        format="YYYY-MM-DD"
                                     />
 
                                 </Item>
                                 <Item>
-                                    <Picker
-                                        mode='dropdown'
-                                        selectedValue={this.state.model.time}
-                                        onValueChange={this.onValueChangeTime}>
-                                        <Items label='11:00 AM' value='11:00 AM' />
-                                        <Items label='12:00 AM' value='12:00 AM' />
-                                        <Items label='1:00 AM' value='1:00 AM' />
-                                        <Items label='2:00 AM' value='2:00 AM' />
-                                        <Items label='3:00 AM' value='3:00 AM' />
-                                        <Items label='4:00 AM' value='4:00 AM' />
-                                        <Items label='5:00 AM' value='5:00 AM' />
-                                        <Items label='6:00 AM' value='6:00 AM' />
-                                        <Items label='7:00 AM' value='7:00 AM' />
-                                        <Items label='1:00 PM' value='1:00 PM' />
-                                        <Items label='2:00 PM' value='2:00 PM' />
-                                        <Items label='3:00 PM' value='3:00 PM' />
-                                        <Items label='4:00 PM' value='4:00 PM' />
-                                        <Items label='5:00 PM' value='5:00 PM' />
-                                        <Items label='6:00 PM' value='6:00 PM' />
-                                        <Items label='7:00 PM' value='7:00 PM' />
-                                    </Picker>
+                                    <Item>
+                                        <Picker
+                                            style={{ paddingRight: 15 }}
+                                            mode='dropdown'
+                                            selectedValue={this.state.model.time}
+                                            onValueChange={this.onValueChangetime}>
+                                            <Items label='Time' value='0' />
+                                            {dataSection.map((i) => (<Item key={i} label={i.toString()} value={i} />))}
+                                        </Picker>
+                                        {/*
+                                        <DatePicker
+                                            style={styles.datepicker}
+                                            date={this.state.model.time}
+                                            mode="time"
+                                            format="HH:mm"
+                                            onDateChange={(date) => { this.setValue({ time: date }) }}
+                                        />
+                                         */}
+                                    </Item>
                                 </Item>
                                 <Item>
                                     <Picker
@@ -412,30 +472,20 @@ class CreateForm extends React.Component {
                                             style={styles.datepicker}
                                             date={this.state.model.date}
                                             onDateChange={(date) => { this.setValue({ date: date }) }}
+                                            minDate="2018-11-24"
+                                            maxDate="2018-12-06"
+                                            format="YYYY-MM-DD"
                                         />
 
                                     </Item>
                                     <Item>
                                         <Picker
+                                            style={{ paddingRight: 15 }}
                                             mode='dropdown'
                                             selectedValue={this.state.model.time}
-                                            onValueChange={this.onValueChangeTime}>
-                                            <Items label='11:00 AM' value='11:00 AM' />
-                                            <Items label='12:00 AM' value='12:00 AM' />
-                                            <Items label='1:00 AM' value='1:00 AM' />
-                                            <Items label='2:00 AM' value='2:00 AM' />
-                                            <Items label='3:00 AM' value='3:00 AM' />
-                                            <Items label='4:00 AM' value='4:00 AM' />
-                                            <Items label='5:00 AM' value='5:00 AM' />
-                                            <Items label='6:00 AM' value='6:00 AM' />
-                                            <Items label='7:00 AM' value='7:00 AM' />
-                                            <Items label='1:00 PM' value='1:00 PM' />
-                                            <Items label='2:00 PM' value='2:00 PM' />
-                                            <Items label='3:00 PM' value='3:00 PM' />
-                                            <Items label='4:00 PM' value='4:00 PM' />
-                                            <Items label='5:00 PM' value='5:00 PM' />
-                                            <Items label='6:00 PM' value='6:00 PM' />
-                                            <Items label='7:00 PM' value='7:00 PM' />
+                                            onValueChange={this.onValueChangetime}>
+                                            <Items label='Time' value='0' />
+                                            {dataSection.map((i) => (<Item key={i} label={i} value={i} />))}
                                         </Picker>
                                     </Item>
                                     <Item>

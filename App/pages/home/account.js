@@ -13,8 +13,8 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: "",
-            password: "",
+            username: "cati3r.admin",
+            password: "!xrm9XcRYM5#EUglL8115BZm#",
             loading: false,
             email: "",
             msg: '',
@@ -37,9 +37,9 @@ class Login extends React.Component {
             }).then(({ data }) => {
                 this.setState({ loading: false })
                 if (data.token) {
-                    // console.log('====================================')
-                    // console.log(data.token)
-                    // console.log('====================================')
+                    console.log('====================================')
+                    console.log(data.token)
+                    console.log('====================================')
                     AsyncStorage.setItem('access_token', data.token);
                     this.props.login('loggedin');
                 }

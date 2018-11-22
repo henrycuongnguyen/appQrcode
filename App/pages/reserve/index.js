@@ -39,6 +39,7 @@ class AllGuests extends Component {
         this.setState({ loading: true });
         AsyncStorage.getItem("access_token").then((value) => {
             this.setState({ "access_token": value });
+            console.log(value, '=======')
             var config = {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -54,6 +55,7 @@ class AllGuests extends Component {
                 this.arrayholder = response.data;
             })
                 .catch(err => {
+                    console.log(err, value)
                     this.setState({
                         loading: false,
                     })
